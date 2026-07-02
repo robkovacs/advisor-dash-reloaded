@@ -1,9 +1,10 @@
 <script setup>
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
+const router = useRouter()
 const email = route.query.email ?? 'you'
-const confirmUrl = `${window.location.origin}${import.meta.env.BASE_URL}account/confirm-email/confirmed`
+const confirmUrl = window.location.origin + router.resolve({ path: '/account/confirm-email/confirmed' }).href
 </script>
 
 <template>

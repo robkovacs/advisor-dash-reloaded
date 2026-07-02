@@ -1,5 +1,6 @@
 <script setup>
 import { inject, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
 import IconArrowLeft from '~icons/ph/arrow-left'
 import Stack from '@/components/Stack.vue'
 import Row from '@/components/Row.vue'
@@ -8,6 +9,7 @@ import { formData } from '@/use/useCreateAccountForm'
 
 const next = inject('next')
 const back = inject('back')
+const router = useRouter()
 
 const channel = new BroadcastChannel('email-confirmation')
 channel.onmessage = (event) => {
@@ -19,7 +21,7 @@ channel.onmessage = (event) => {
 
 function openEmail() {
   window.open(
-    `${import.meta.env.BASE_URL}account/confirm-email?email=${encodeURIComponent(formData.emailWork)}`,
+    router.resolve({ path: '/account/confirm-email', query: { email: formData.emailWork } }).href,
     '_blank',
   )
 }

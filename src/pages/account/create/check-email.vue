@@ -1,5 +1,6 @@
 <script setup>
 import { inject } from 'vue'
+import { useRouter } from 'vue-router'
 import IconArrowLeft from '~icons/ph/arrow-left'
 import Stack from '@/components/Stack.vue'
 import InputEmail from '@/components/InputEmail.vue'
@@ -22,11 +23,12 @@ const { defineField, handleSubmit, errors } = useForm({
   },
 })
 
+const router = useRouter()
 const [emailWork] = defineField('emailWork')
 
 const onSubmit = handleSubmit((values) => {
   window.open(
-    `${import.meta.env.BASE_URL}account/confirm-email?email=${encodeURIComponent(values.emailWork)}`,
+    router.resolve({ path: '/account/confirm-email', query: { email: values.emailWork } }).href,
     '_blank',
   )
   next({ emailWork: values.emailWork })
