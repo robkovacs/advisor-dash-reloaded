@@ -90,7 +90,7 @@ const hasSetupItems = computed(() =>
             </Stack>
           </Row>
           <FlexSpace />
-          <Button size="small">Connect</Button>
+          <Button size="small" to="/clients/connect">Connect</Button>
         </Row>
       </div>
     </Stack>
@@ -121,7 +121,9 @@ const hasSetupItems = computed(() =>
                   @click="skipped.add('team')"
                   >Skip</Button
                 >
-                <Button size="small">Send invites</Button>
+                <Button size="small" to="/firm-members/invite"
+                  >Send invites</Button
+                >
               </Row>
             </Row>
           </div>
@@ -147,7 +149,7 @@ const hasSetupItems = computed(() =>
                   @click="skipped.add('profile')"
                   >Skip</Button
                 >
-                <Button size="small">Edit firm profile</Button>
+                <Button size="small" to="/firm/edit">Edit firm profile</Button>
               </Row>
             </Row>
           </div>
@@ -175,7 +177,7 @@ const hasSetupItems = computed(() =>
                   @click="skipped.add('billing')"
                   >Skip</Button
                 >
-                <Button size="small">Set up</Button>
+                <Button size="small" to="/firm/billing/setup">Set up</Button>
               </Row>
             </Row>
           </div>
