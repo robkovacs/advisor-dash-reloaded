@@ -1,5 +1,6 @@
 :root {
   --space-base: 0.25rem;
+  --space-0: 0;
   --space-0-5: calc(var(--space-base) * 0.5);
   --space-1: calc(var(--space-base) * 1);
   --space-2: calc(var(--space-base) * 2);

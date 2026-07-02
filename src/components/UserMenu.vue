@@ -61,14 +61,14 @@ onBeforeUnmount(() =>
   <div ref="wrapperRef" class="user-menu-wrapper">
     <button class="user-menu" :aria-expanded="dialogRef?.open" @click="toggle">
       <Row align="center" justify="space-between">
-        <Row align="center" gap="3">
+        <Row align="center" gap="3" class="user-menu-identity">
           <div class="avatar">{{ initials }}</div>
-          <Stack gap="0" align="flex-start">
-            {{ fullName }}
+          <Stack gap="0" align="flex-start" class="user-info">
+            <span class="full-name">{{ fullName }}</span>
             <span class="firm-name">{{ firmName }}</span>
           </Stack>
         </Row>
-        <IconCaretRight />
+        <IconCaretRight class="user-menu-caret" />
       </Row>
     </button>
     <Teleport to="body">
@@ -112,6 +112,7 @@ onBeforeUnmount(() =>
   padding: var(--space-3);
   font-weight: var(--font-weight-bold);
   width: 100%;
+  text-align: left;
 }
 
 .avatar {
@@ -119,11 +120,33 @@ onBeforeUnmount(() =>
   width: 2.5rem;
   border-radius: 50%;
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   background-color: var(--color-blue-200);
   color: var(--color-gray-950);
   font-weight: var(--font-weight-bold);
+}
+
+.user-menu-caret {
+  flex-shrink: 0;
+}
+
+.user-menu-identity {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.user-info {
+  min-width: 0;
+}
+
+.full-name,
+.firm-name {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .firm-name {
