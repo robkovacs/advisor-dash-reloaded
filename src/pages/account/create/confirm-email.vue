@@ -19,7 +19,7 @@ channel.onmessage = (event) => {
 
 function openEmail() {
   window.open(
-    `/account/confirm-email?email=${encodeURIComponent(formData.emailWork)}`,
+    `${import.meta.env.BASE_URL}account/confirm-email?email=${encodeURIComponent(formData.emailWork)}`,
     '_blank',
   )
 }

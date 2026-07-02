@@ -3,7 +3,7 @@ import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const email = route.query.email ?? 'you'
-const confirmUrl = `${window.location.origin}/account/confirm-email/confirmed`
+const confirmUrl = `${window.location.origin}${import.meta.env.BASE_URL}account/confirm-email/confirmed`
 </script>
 
 <template>
@@ -84,7 +84,7 @@ const confirmUrl = `${window.location.origin}/account/confirm-email/confirmed`
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  background-image: url(/fake-email-avatar.png);
+  background-image: url(@/assets/fake-email-avatar.png);
   background-size: cover;
 }
 

@@ -26,7 +26,7 @@ const [emailWork] = defineField('emailWork')
 
 const onSubmit = handleSubmit((values) => {
   window.open(
-    `/account/confirm-email?email=${encodeURIComponent(values.emailWork)}`,
+    `${import.meta.env.BASE_URL}account/confirm-email?email=${encodeURIComponent(values.emailWork)}`,
     '_blank',
   )
   next({ emailWork: values.emailWork })
