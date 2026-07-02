@@ -1,6 +1,8 @@
 <script setup>
 import ToutList from './internals/ToutList.vue'
 import Logo from '@/components/Logo.vue'
+
+definePage({ meta: { title: 'Welcome' } })
 import Button from '@/components/Button.vue'
 import Stack from '@/components/Stack.vue'
 import Row from '@/components/Row.vue'

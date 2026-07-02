@@ -1,6 +1,8 @@
 <script setup>
 import { computed, provide, ref, watch } from 'vue'
 import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
+
+definePage({ meta: { title: 'Create account' } })
 import Logo from '@/components/Logo.vue'
 import Notice from '@/components/Notice.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
@@ -111,4 +113,3 @@ main {
   left: 0;
 }
 </style>
-

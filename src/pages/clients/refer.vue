@@ -1,6 +1,8 @@
 <script setup>
 import { computed, provide, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+
+definePage({ meta: { title: 'Refer a client' } })
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import Stack from '@/components/Stack.vue'
 import Columns from '@/components/Columns.vue'
@@ -45,12 +47,19 @@ watch(
     if (ni !== -1 && oi !== -1) forward.value = ni > oi
   },
 )
-const transition = computed(() => (forward.value ? 'step-forward' : 'step-back'))
+const transition = computed(() =>
+  forward.value ? 'step-forward' : 'step-back',
+)
 
 const steps = computed(() =>
   STEP_LABELS.map((label, i) => ({
     label,
-    status: i < stepIndex.value ? 'complete' : i === stepIndex.value ? 'current' : 'pending',
+    status:
+      i < stepIndex.value
+        ? 'complete'
+        : i === stepIndex.value
+          ? 'current'
+          : 'pending',
     to: i < stepIndex.value ? STEPS[i] : undefined,
   })),
 )
@@ -70,7 +79,6 @@ function back() {
 provide('referFormData', referFormData)
 provide('next', next)
 provide('back', back)
-
 </script>
 
 <template>

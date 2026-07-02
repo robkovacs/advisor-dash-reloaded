@@ -2,6 +2,8 @@
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import Stack from '@/components/Stack.vue'
 
+definePage({ meta: { title: 'Bulk referrals' } })
+
 const crumbs = [
   { label: 'Clients', to: '/clients' },
   { label: 'Refer a client', to: '/clients/refer' },

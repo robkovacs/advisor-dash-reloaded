@@ -2,6 +2,8 @@
 import Logo from '@/assets/logo-justworks.svg'
 
 import { useRouter } from 'vue-router'
+
+definePage({ meta: { title: 'Log in' } })
 import { useForm } from 'vee-validate'
 import * as yup from 'yup'
 import InputText from '@/components/InputText.vue'
@@ -15,15 +17,15 @@ const ACCOUNTS = {
   tester: {
     password: 'TestingTesting123',
     data: {
-      emailWork:     'rob@acmecpas.com',
-      firmName:      'Acme CPAs',
-      firmWebsite:   'acmecpas.com',
-      firstName:     'Rob',
-      lastName:      'Kovacs',
-      role:          'accountant',
-      username:      'tester',
+      emailWork: 'rob@acmecpas.com',
+      firmName: 'Acme CPAs',
+      firmWebsite: 'acmecpas.com',
+      firstName: 'Rob',
+      lastName: 'Kovacs',
+      role: 'accountant',
+      username: 'tester',
       personalEmail: 'rob@personal.com',
-      cellPhone:     '(555) 867-5309',
+      cellPhone: '(555) 867-5309',
     },
   },
 }

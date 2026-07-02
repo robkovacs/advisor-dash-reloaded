@@ -3,7 +3,7 @@ import Logo from '@/components/Logo.vue'
 import Button from '@/components/Button.vue'
 import Stack from '@/components/Stack.vue'
 
-definePage({ meta: { noLayout: true } })
+definePage({ meta: { noLayout: true, title: 'Page not found' } })
 </script>
 
 <template>

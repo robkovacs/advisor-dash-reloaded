@@ -27,7 +27,9 @@ router.beforeEach((to, from) => {
   }
 })
 
-router.afterEach(() => {
+router.afterEach((to) => {
+  const title = to.matched.findLast((r) => r.meta.title)?.meta.title
+  document.title = title ? `${title} — Advisor Dashboard` : 'Advisor Dashboard'
   window.scrollTo({ top: 0, behavior: 'smooth' })
 })
 
