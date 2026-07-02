@@ -5,7 +5,8 @@ import VueRouter from 'unplugin-vue-router/vite'
 import Icons from 'unplugin-icons/vite'
 import svgLoader from 'vite-svg-loader'
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
+  base: command === 'build' ? '/advisor-dash-reloaded/' : '/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -17,4 +18,4 @@ export default defineConfig({
     Icons({ compiler: 'vue3', defaultClass: 'icon', scale: 1 }),
     svgLoader({ defaultImport: 'component' }),
   ],
-})
+}))
