@@ -1,0 +1,14 @@
+:root {
+  --space-base: 0.25rem;
+  --space-0-5: calc(var(--space-base) * 0.5);
+  --space-1: calc(var(--space-base) * 1);
+  --space-2: calc(var(--space-base) * 2);
+  --space-3: calc(var(--space-base) * 3);
+  --space-4: calc(var(--space-base) * 4);
+  --space-6: calc(var(--space-base) * 6);
+  --space-8: calc(var(--space-base) * 8);
+  --space-10: calc(var(--space-base) * 10);
+  --space-12: calc(var(--space-base) * 12);
+  --space-16: calc(var(--space-base) * 16);
+  --space-20: calc(var(--space-base) * 20);
+}

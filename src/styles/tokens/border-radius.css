@@ -1,0 +1,6 @@
+:root {
+    --border-radius-sm: 0.25rem;
+    --border-radius-md: 0.5rem;
+    --border-radius-lg: 1rem;
+    --border-radius-max: 9999rem;
+}
