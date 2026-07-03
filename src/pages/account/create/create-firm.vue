@@ -55,9 +55,12 @@ const onSubmit = handleSubmit((values) => {
           optional
         />
         <Notice class="notice--email-domain">
-          All future firm members will need to use email addresses ending in
-          <strong>@{{ createAccountFormData.emailWork?.split('@')[1] }}</strong
-          >.
+          <p>
+            All future firm members will need to use email addresses ending in
+            <strong
+              >@{{ createAccountFormData.emailWork?.split('@')[1] }}</strong
+            >.
+          </p>
         </Notice>
         <Button type="submit" variant="primary">Continue</Button>
       </Stack>
