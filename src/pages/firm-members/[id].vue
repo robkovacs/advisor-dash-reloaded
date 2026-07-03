@@ -1,24 +1,23 @@
 <script setup>
 import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { firmMembers } from '@/use/useFirmMembers'
 import Stack from '@/components/Stack.vue'
 import Row from '@/components/Row.vue'
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import Badge from '@/components/Badge.vue'
+import Button from '@/components/Button.vue'
+import FocusedLayout from '@/layouts/FocusedLayout.vue'
 
 definePage({ meta: { title: 'Firm member' } })
 
 const route = useRoute()
-const router = useRouter()
 
 const member = computed(() => firmMembers.value.find((m) => m.id === route.params.id))
 
-if (!member.value) router.replace('/firm-members')
-
 const crumbs = [
   { label: 'Firm members', to: '/firm-members' },
-  { label: member.value ? `${member.value.firstName} ${member.value.lastName}` : 'Member' },
+  { label: member.value ? `${member.value.firstName} ${member.value.lastName}` : 'Firm member' },
 ]
 
 const roleLabel = {
@@ -49,5 +48,11 @@ const roleLabel = {
       <p v-if="member.workPhone">{{ member.workPhone }}</p>
     </Stack>
   </Stack>
+  <FocusedLayout v-else>
+    <Stack gap="8">
+      <h1>Page not found</h1>
+      <p>This page doesn't exist.</p>
+      <Button to="/" variant="primary">Go home</Button>
+    </Stack>
+  </FocusedLayout>
 </template>
-

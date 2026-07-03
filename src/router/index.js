@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { routes } from 'vue-router/auto-routes'
 import { clearReferForm } from '@/use/useReferClientForm'
+import { clients } from '@/use/useClients'
+import { firmMembers } from '@/use/useFirmMembers'
 
 const REFER_PATHS = [
   '/clients/refer',
@@ -24,6 +26,17 @@ router.beforeEach((to, from) => {
 
   if (to.path === '/clients/refer' && !REFER_PATHS.includes(from.path)) {
     clearReferForm()
+  }
+
+  // Suppress AppLayout for [id] routes when the resource doesn't exist
+  if (to.params.id) {
+    if (to.path.startsWith('/clients/')) {
+      to.meta.noLayout = !clients.value.some((c) => c.id === to.params.id)
+    } else if (to.path.startsWith('/firm-members/')) {
+      to.meta.noLayout = !firmMembers.value.some((m) => m.id === to.params.id)
+    } else {
+      to.meta.noLayout = false
+    }
   }
 })
 
