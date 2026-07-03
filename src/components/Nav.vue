@@ -79,12 +79,12 @@ import AppearanceSwitch from '@/components/AppearanceSwitch.vue'
 
 .nav-item.router-link-active {
   background: var(--color-bg-muted);
-  color: var(--color-accent-text);
+  color: var(--color-accent);
   font-weight: var(--font-weight-bold);
 }
 
 .nav-item.router-link-active .icon {
-  color: var(--color-accent-text);
+  color: var(--color-accent);
 }
 @media (hover: hover) {
   .nav-item:hover {

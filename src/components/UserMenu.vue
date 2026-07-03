@@ -123,7 +123,7 @@ onBeforeUnmount(() =>
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  background-color: var(--color-blue-200);
+  background-color: var(--color-blue-100);
   color: var(--color-gray-950);
   font-weight: var(--font-weight-bold);
 }

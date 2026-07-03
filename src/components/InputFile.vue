@@ -177,7 +177,7 @@ function removeFile(index) {
 
 .dropzone__button {
   appearance: none;
-  border: 1px solid var(--color-button-border);
+  border: 1px solid var(--color-input-border);
   border-radius: var(--border-radius-md);
   background: transparent;
   padding: var(--space-2) var(--space-4);

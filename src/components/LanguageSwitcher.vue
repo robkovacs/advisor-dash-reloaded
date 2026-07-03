@@ -22,7 +22,7 @@ import IconCaretDown from '~icons/ph/caret-down'
   font-size: var(--font-size-sm);
   align-items: center;
   background-color: transparent;
-  border: 1px solid var(--color-button-border);
+  border: 1px solid var(--color-input-border);
   color: inherit;
 }
 

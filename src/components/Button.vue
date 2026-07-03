@@ -67,7 +67,7 @@ defineProps({
 .btn--secondary {
   background: transparent;
   color: var(--color-text);
-  border-color: var(--color-button-border);
+  border-color: var(--color-input-border);
 }
 
 .btn--tertiary {

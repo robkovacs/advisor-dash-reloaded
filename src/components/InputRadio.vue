@@ -67,7 +67,7 @@ const groupName = useId()
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-3);
-  border: 1px solid var(--color-button-border);
+  border: 1px solid var(--color-input-border);
   border-radius: var(--border-radius-md);
   background: var(--color-bg);
   cursor: pointer;

@@ -7,7 +7,7 @@
   --color-gray-100: #f3f4f6;
   --color-gray-200: #e5e7eb;
   --color-gray-300: #d1d5db;
-  --color-gray-400: #9ca3af;
+  --color-gray-400: #8e95a2;
   --color-gray-500: #6b7280;
   --color-gray-600: #4b5563;
   --color-gray-700: #374151;
@@ -61,19 +61,17 @@
 
   --color-text:        var(--color-gray-900);
   --color-text-muted:  var(--color-gray-500);
-  --color-text-subtle: var(--color-gray-400);
+  --color-text-subtle: var(--color-gray-500);
   --color-text-on-accent: var(--color-white);
 
   --color-line:                var(--color-gray-300);
-  --color-button-border:       var(--color-gray-400);
-  --color-button-border-hover: var(--color-gray-500);
-  --color-input-border:        var(--color-gray-500);
-  --color-input-border-hover:  var(--color-gray-600);
+  --color-input-border:        var(--color-gray-400);
+  --color-input-border-hover:  var(--color-gray-500);
 
   --color-accent:        var(--color-blue-600);
   --color-accent-hover:  var(--color-blue-700);
   --color-accent-subtle: var(--color-blue-50);
-  --color-accent-text:   var(--color-blue-600);
+  --color-accent-text:   var(--color-blue-700);
   --color-accent-border: var(--color-blue-500);
 
   --color-error:              var(--color-red-600);
@@ -88,43 +86,6 @@
 }
 
 /* Semantic — dark mode */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --color-bg:          var(--color-gray-950);
-    --color-bg-subtle:   var(--color-gray-900);
-    --color-bg-muted:    var(--color-gray-800);
-    --color-bg-dark:     var(--color-blue-950);
-
-    --color-text:        var(--color-gray-50);
-    --color-text-muted:  var(--color-gray-400);
-    --color-text-subtle: var(--color-gray-500);
-    --color-text-on-accent: var(--color-white);
-
-    --color-line:        var(--color-gray-600);
-    --color-button-border:      var(--color-gray-400);
-    --color-button-border-hover: var(--color-gray-300);
-
-    --color-input-border:      var(--color-gray-500);
-    --color-input-border-hover: var(--color-gray-400);
-
-    --color-accent:        var(--color-blue-500);
-    --color-accent-hover:  var(--color-blue-400);
-    --color-accent-subtle: var(--color-blue-950);
-    --color-accent-text:   var(--color-blue-400);
-    --color-accent-border: var(--color-blue-700);
-
-    --color-error:              var(--color-red-400);
-    --color-error-subtle:       var(--color-red-950);
-    --color-error-border:       var(--color-red-700);
-    --color-error-border-hover: var(--color-red-600);
-
-    --color-success:        var(--color-green-400);
-    --color-success-subtle: var(--color-green-950);
-    --color-success-text:   var(--color-green-400);
-    --color-success-border: var(--color-green-700);
-  }
-}
-
 [data-theme="dark"] {
   --color-bg:          var(--color-gray-950);
   --color-bg-subtle:   var(--color-gray-900);
@@ -133,18 +94,18 @@
 
   --color-text:        var(--color-gray-50);
   --color-text-muted:  var(--color-gray-400);
-  --color-text-subtle: var(--color-gray-500);
+  --color-text-subtle: var(--color-gray-400);
   --color-text-on-accent: var(--color-white);
 
-  --color-line:        var(--color-gray-600);
-  --color-border:      var(--color-gray-500);
-  --color-border-hover: var(--color-gray-400);
+  --color-line:                var(--color-gray-700);
+  --color-input-border:        var(--color-gray-500);
+  --color-input-border-hover:  var(--color-gray-400);
 
   --color-accent:        var(--color-blue-500);
   --color-accent-hover:  var(--color-blue-400);
   --color-accent-subtle: var(--color-blue-950);
   --color-accent-text:   var(--color-blue-400);
-  --color-accent-border: var(--color-blue-800);
+  --color-accent-border: var(--color-blue-700);
 
   --color-error:              var(--color-red-400);
   --color-error-subtle:       var(--color-red-950);
@@ -153,6 +114,6 @@
 
   --color-success:        var(--color-green-400);
   --color-success-subtle: var(--color-green-950);
-  --color-success-text:   var(--color-green-400);
+  --color-success-text:   var(--color-green-300);
   --color-success-border: var(--color-green-700);
 }
