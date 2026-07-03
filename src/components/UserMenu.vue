@@ -1,9 +1,11 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/dom'
 import { currentUser } from '@/use/useCurrentUser'
 import { firm } from '@/use/useFirm'
 import IconCaretRight from '~icons/ph/caret-right'
+import IconCaretDown from '~icons/ph/caret-down'
 import IconSignOut from '~icons/ph/sign-out'
 import IconMoon from '~icons/ph/moon'
 import IconGlobeSimple from '~icons/ph/globe-simple'
@@ -25,15 +27,30 @@ const initials = computed(() =>
 )
 const dialogRef = ref(null)
 const wrapperRef = ref(null)
+const mq = window.matchMedia('(min-width: 40rem)')
+let cleanupAutoUpdate = null
+
+async function updatePosition() {
+  const { x, y } = await computePosition(wrapperRef.value, dialogRef.value, {
+    placement: mq.matches ? 'right-end' : 'bottom-end',
+    middleware: [offset(8), flip(), shift({ padding: 8 })],
+  })
+  dialogRef.value.style.left = `${x}px`
+  dialogRef.value.style.top = `${y}px`
+}
+
+function closeDialog() {
+  dialogRef.value.close()
+  cleanupAutoUpdate?.()
+  cleanupAutoUpdate = null
+}
 
 function toggle() {
   if (dialogRef.value.open) {
-    dialogRef.value.close()
+    closeDialog()
   } else {
     dialogRef.value.show()
-    const rect = wrapperRef.value.getBoundingClientRect()
-    dialogRef.value.style.left = `${rect.right + 24}px`
-    dialogRef.value.style.top = `${rect.bottom - dialogRef.value.offsetHeight}px`
+    cleanupAutoUpdate = autoUpdate(wrapperRef.value, dialogRef.value, updatePosition)
   }
 }
 
@@ -47,14 +64,23 @@ function onDocumentClick(e) {
     !dialogRef.value.contains(e.target) &&
     !wrapperRef.value.contains(e.target)
   ) {
-    dialogRef.value.close()
+    closeDialog()
   }
 }
 
-onMounted(() => document.addEventListener('click', onDocumentClick, true))
-onBeforeUnmount(() =>
-  document.removeEventListener('click', onDocumentClick, true),
-)
+function onMqChange() {
+  if (dialogRef.value?.open) closeDialog()
+}
+
+onMounted(() => {
+  document.addEventListener('click', onDocumentClick, true)
+  mq.addEventListener('change', onMqChange)
+})
+onBeforeUnmount(() => {
+  document.removeEventListener('click', onDocumentClick, true)
+  mq.removeEventListener('change', onMqChange)
+  cleanupAutoUpdate?.()
+})
 </script>
 
 <template>
@@ -68,7 +94,8 @@ onBeforeUnmount(() =>
             <span class="firm-name">{{ firmName }}</span>
           </Stack>
         </Row>
-        <IconCaretRight class="user-menu-caret" />
+        <IconCaretRight class="user-menu-caret user-menu-caret--right" />
+        <IconCaretDown class="user-menu-caret user-menu-caret--down" />
       </Row>
     </button>
     <Teleport to="body">
@@ -130,6 +157,20 @@ onBeforeUnmount(() =>
 
 .user-menu-caret {
   flex-shrink: 0;
+}
+
+.user-menu-caret--right {
+  display: none;
+}
+
+@media (--breakpoint-sm) {
+  .user-menu-caret--right {
+    display: block;
+  }
+
+  .user-menu-caret--down {
+    display: none;
+  }
 }
 
 .user-menu-identity {

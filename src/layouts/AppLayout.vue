@@ -21,7 +21,7 @@ import Nav from '@/components/Nav.vue'
   min-height: 100svh;
 }
 
-@media (min-width: 768px) {
+@media (--breakpoint-sm) {
   .layout {
     flex-direction: row;
   }
@@ -32,7 +32,14 @@ main {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  padding: var(--space-12) var(--space-20);
+  padding: var(--space-12) var(--space-6);
   align-items: stretch;
+  container-type: inline-size;
+}
+
+@media (--breakpoint-sm) {
+  main {
+    padding: var(--space-12) var(--space-20);
+  }
 }
 </style>

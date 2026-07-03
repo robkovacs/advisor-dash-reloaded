@@ -35,7 +35,7 @@ const hasSetupItems = computed(() =>
 
     <Stack gap="6">
       <h3>Add your clients</h3>
-      <Row gap="6" align="stretch">
+      <div class="primary-cards">
         <FirmSetupCard
           variant="primary"
           title="Refer clients"
@@ -60,7 +60,7 @@ const hasSetupItems = computed(() =>
             >
           </template>
         </FirmSetupCard>
-      </Row>
+      </div>
       <FirmSetupCard
         title="Connect to existing Justworks customers"
         description="Start managing clients that already use Justworks."
@@ -84,14 +84,14 @@ const hasSetupItems = computed(() =>
             <template #icon><IconUsersThree /></template>
             <template #actions>
               <Row gap="2" shrink>
+                <Button size="small" to="/firm-members/invite"
+                  >Send invites</Button
+                >
                 <Button
                   size="small"
                   variant="tertiary"
                   @click="skipped.add('team')"
                   >Skip</Button
-                >
-                <Button size="small" to="/firm-members/invite"
-                  >Send invites</Button
                 >
               </Row>
             </template>
@@ -104,13 +104,13 @@ const hasSetupItems = computed(() =>
             <template #icon><IconListChecks /></template>
             <template #actions>
               <Row gap="2" shrink>
+                <Button size="small" to="/firm/edit">Edit firm profile</Button>
                 <Button
                   size="small"
                   variant="tertiary"
                   @click="skipped.add('profile')"
                   >Skip</Button
                 >
-                <Button size="small" to="/firm/edit">Edit firm profile</Button>
               </Row>
             </template>
           </FirmSetupCard>
@@ -123,13 +123,13 @@ const hasSetupItems = computed(() =>
             <template #icon><IconInvoice /></template>
             <template #actions>
               <Row gap="2" shrink>
+                <Button size="small" to="/firm/billing/setup">Set up</Button>
                 <Button
                   size="small"
                   variant="tertiary"
                   @click="skipped.add('billing')"
                   >Skip</Button
                 >
-                <Button size="small" to="/firm/billing/setup">Set up</Button>
               </Row>
             </template>
           </FirmSetupCard>
@@ -148,6 +148,19 @@ const hasSetupItems = computed(() =>
 </template>
 
 <style scoped>
+.primary-cards {
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-6);
+  align-items: stretch;
+}
+
+@container (max-width: 30rem) {
+  .primary-cards {
+    flex-direction: column;
+  }
+}
+
 .setup-items {
   display: flex;
   flex-direction: column;

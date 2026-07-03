@@ -58,12 +58,6 @@ defineProps({
   color: var(--color-text-on-accent);
 }
 
-.btn--small {
-  height: 2.25rem;
-  font-size: var(--font-size-sm);
-  padding: var(--space-2) var(--space-4);
-}
-
 .btn--secondary {
   background: transparent;
   color: var(--color-text);
@@ -71,9 +65,15 @@ defineProps({
 }
 
 .btn--tertiary {
-  background: var(--color-bg);
+  background: transparent;
   color: var(--color-text);
   border-color: transparent;
+}
+
+.btn--small {
+  height: 2.25rem;
+  font-size: var(--font-size-sm);
+  padding: var(--space-2) var(--space-4);
 }
 
 .btn:disabled,
@@ -106,7 +106,7 @@ defineProps({
   }
 
   .btn--tertiary:hover {
-    background: var(--color-bg-muted);
+    background: color-mix(in srgb, var(--color-text) 6%, transparent);
   }
 
   .btn:disabled:hover,

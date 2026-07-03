@@ -1,30 +1,57 @@
 <script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import Row from '@/components/Row.vue'
 import Stack from '@/components/Stack.vue'
 import Logo from '@/components/Logo.vue'
 import UserMenu from '@/components/UserMenu.vue'
+import IconMenu from '~icons/ph/list'
+import IconClose from '~icons/ph/x'
 import IconHome from '~icons/ph/house-line'
-import IconBuildingOffice from '~icons/ph/building-office'
-import IconUsersThree from '~icons/ph/users-three'
+import Button from '@/components/Button.vue'
+import IconClients from '~icons/ph/building-office'
+import IconFirmMembers from '~icons/ph/users-three'
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 import AppearanceSwitch from '@/components/AppearanceSwitch.vue'
+
+const open = ref(false)
+
+const mq = window.matchMedia('(min-width: 36rem)')
+mq.addEventListener('change', (e) => {
+  if (e.matches) open.value = false
+})
+
+const router = useRouter()
+router.afterEach(() => {
+  open.value = false
+})
 </script>
 
 <template>
-  <div class="sidebar">
+  <div class="sidebar" :class="{ 'is-open': open }">
     <Stack gap="4" align="flex-start">
       <div class="logo-container">
         <Logo height="2rem" />
+        <Button
+          class="menu-button"
+          variant="tertiary"
+          size="small"
+          :aria-label="open ? 'Close menu' : 'Open menu'"
+          @click="open = !open"
+        >
+          <IconClose v-if="open" />
+          <IconMenu v-else />
+        </Button>
       </div>
       <nav class="nav">
         <RouterLink class="nav-item" to="/dashboard">
           <IconHome class="icon" /> Home</RouterLink
         >
         <RouterLink class="nav-item" to="/clients">
-          <IconBuildingOffice class="icon" /> Clients</RouterLink
+          <IconClients class="icon" /> Clients</RouterLink
         >
         <RouterLink class="nav-item" to="/firm-members">
-          <IconUsersThree class="icon" /> Firm members</RouterLink
+          <IconFirmMembers class="icon" /> Firm members</RouterLink
         >
       </nav>
     </Stack>
@@ -40,25 +67,66 @@ import AppearanceSwitch from '@/components/AppearanceSwitch.vue'
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 16rem;
   flex-shrink: 0;
   position: sticky;
   top: 0;
   max-height: 100vh;
   overflow-y: auto;
+  z-index: 4;
+}
+
+/* Below breakpoint-sm: hide nav + UserMenu unless open */
+.nav,
+.sidebar :deep(.user-menu) {
+  display: none;
+}
+
+.sidebar.is-open .nav,
+.sidebar.is-open :deep(.user-menu) {
+  display: flex;
+}
+
+@media (--breakpoint-sm) {
+  .sidebar {
+    width: 16rem;
+    z-index: auto;
+  }
+
+  .menu-button {
+    display: none;
+  }
+
+  .nav,
+  .sidebar :deep(.user-menu) {
+    display: flex;
+  }
 }
 
 .logo-container {
-  padding-top: var(--space-3);
-  padding-left: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+@media (--breakpoint-sm) {
+  .logo-container {
+    padding-top: var(--space-3);
+  }
 }
 
 .nav {
-  display: block;
   width: 100%;
-  display: flex;
   flex-direction: column;
   gap: var(--space-1);
+  margin-bottom: var(--space-8);
+}
+
+@media (--breakpoint-sm) {
+  .nav {
+    margin-bottom: 0;
+  }
 }
 
 .nav-item {
@@ -86,6 +154,7 @@ import AppearanceSwitch from '@/components/AppearanceSwitch.vue'
 .nav-item.router-link-active .icon {
   color: var(--color-accent);
 }
+
 @media (hover: hover) {
   .nav-item:hover {
     text-decoration: none;

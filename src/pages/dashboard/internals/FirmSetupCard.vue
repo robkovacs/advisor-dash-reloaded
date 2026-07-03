@@ -15,8 +15,8 @@ defineProps({
 
 <template>
   <div class="firm-setup-card">
-    <Stack v-if="variant === 'primary'" gap="6">
-      <Stack gap="4">
+    <Stack v-if="variant === 'primary'" gap="6" class="primary-layout">
+      <Stack gap="4" class="primary-content">
         <Row align="center" gap="4">
           <IconBox><slot name="icon" /></IconBox>
           <h3>{{ title }}</h3>
@@ -26,7 +26,7 @@ defineProps({
       <slot name="actions" />
     </Stack>
 
-    <Row v-else align="center">
+    <Row v-else align="center" class="secondary-outer" gap="6">
       <Row align="center" gap="4">
         <IconBox><slot name="icon" /></IconBox>
         <Stack gap="2">
@@ -49,5 +49,24 @@ defineProps({
   border: 1px solid var(--color-line);
   border-radius: var(--border-radius-md);
   width: 100%;
+  container-type: inline-size;
+}
+
+@container (max-width: 26rem) {
+  :deep(.secondary-outer) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  :deep(.secondary-outer > .flex-space) {
+    display: none;
+  }
+}
+
+.primary-layout {
+  height: 100%;
+}
+
+.primary-content {
+  flex: 1;
 }
 </style>

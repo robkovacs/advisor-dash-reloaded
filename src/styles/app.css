@@ -1,4 +1,5 @@
 @import 'fonts/oately.css';
+@import 'tokens/breakpoints.css';
 @import 'tokens/color.css';
 @import 'tokens/space.css';
 @import 'tokens/typography.css';
