@@ -5,7 +5,7 @@ import IconArrowLeft from '~icons/ph/arrow-left'
 import Stack from '@/components/Stack.vue'
 import Row from '@/components/Row.vue'
 import Button from '@/components/Button.vue'
-import { formData } from '@/use/useCreateAccountForm'
+import { createAccountFormData } from '@/use/useCreateAccountForm'
 
 const next = inject('next')
 const back = inject('back')
@@ -21,7 +21,7 @@ channel.onmessage = (event) => {
 
 function openEmail() {
   window.open(
-    router.resolve({ path: '/account/confirm-email', query: { email: formData.emailWork } }).href,
+    router.resolve({ path: '/account/confirm-email', query: { email: createAccountFormData.emailWork } }).href,
     '_blank',
   )
 }
@@ -40,7 +40,7 @@ onUnmounted(() => channel.close())
     <Stack gap="3">
       <p>
         We sent a confirmation link via email to
-        <strong>{{ formData.emailWork }}</strong
+        <strong>{{ createAccountFormData.emailWork }}</strong
         >.
       </p>
     </Stack>

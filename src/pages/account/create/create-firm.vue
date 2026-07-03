@@ -8,7 +8,7 @@ import InputText from '@/components/InputText.vue'
 import Button from '@/components/Button.vue'
 import { useForm } from 'vee-validate'
 import * as yup from 'yup'
-import { formData } from '@/use/useCreateAccountForm'
+import { createAccountFormData } from '@/use/useCreateAccountForm'
 
 const next = inject('next')
 const back = inject('back')
@@ -19,8 +19,8 @@ const { defineField, handleSubmit, errors } = useForm({
     firmWebsite: yup.string().url('Enter a valid URL'),
   }),
   initialValues: {
-    firmName: formData?.firmName ?? '',
-    firmWebsite: formData?.firmWebsite ?? '',
+    firmName: createAccountFormData?.firmName ?? '',
+    firmWebsite: createAccountFormData?.firmWebsite ?? '',
   },
 })
 
@@ -56,7 +56,7 @@ const onSubmit = handleSubmit((values) => {
         />
         <Notice class="notice--email-domain">
           All future firm members will need to use email addresses ending in
-          <strong>@{{ formData.emailWork?.split('@')[1] }}</strong
+          <strong>@{{ createAccountFormData.emailWork?.split('@')[1] }}</strong
           >.
         </Notice>
         <Button type="submit" variant="primary">Continue</Button>

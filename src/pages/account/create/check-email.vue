@@ -7,7 +7,7 @@ import InputEmail from '@/components/InputEmail.vue'
 import Button from '@/components/Button.vue'
 import { useForm } from 'vee-validate'
 import * as yup from 'yup'
-import { formData } from '@/use/useCreateAccountForm'
+import { createAccountFormData } from '@/use/useCreateAccountForm'
 
 const next = inject('next')
 
@@ -19,7 +19,7 @@ const { defineField, handleSubmit, errors } = useForm({
       .required('Email is required'),
   }),
   initialValues: {
-    emailWork: formData?.emailWork ?? '',
+    emailWork: createAccountFormData?.emailWork ?? '',
   },
 })
 

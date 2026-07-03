@@ -10,10 +10,11 @@ import IconListChecks from '~icons/ph/list-checks-duotone'
 import Button from '@/components/Button.vue'
 import FirmSetupCard from './FirmSetupCard.vue'
 import { computed, reactive } from 'vue'
-import { formData } from '@/use/useCreateAccountForm'
+import { currentUser } from '@/use/useCurrentUser'
+import { firm } from '@/use/useFirm'
 
-const userFirstName = computed(() => formData.firstName || 'there')
-const firmName = computed(() => formData.firmName || 'your firm')
+const userFirstName = computed(() => currentUser.firstName || 'there')
+const firmName = computed(() => firm.name || 'your firm')
 
 const skipped = reactive(new Set())
 const hasSetupItems = computed(() =>

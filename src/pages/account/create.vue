@@ -6,7 +6,7 @@ definePage({ meta: { title: 'Create account' } })
 import FocusedLayout from '@/layouts/FocusedLayout.vue'
 import Notice from '@/components/Notice.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
-import { formData, fromLogin } from '@/use/useCreateAccountForm'
+import { createAccountFormData, fromLogin } from '@/use/useCreateAccountForm'
 
 const route = useRoute()
 const router = useRouter()
@@ -41,7 +41,7 @@ watch(
 const showLoginNotice = computed(() => fromLogin.value && stepIndex.value === 0)
 
 function next(data = {}) {
-  Object.assign(formData, data)
+  Object.assign(createAccountFormData, data)
   const nextPath = STEPS[stepIndex.value + 1] ?? '/dashboard'
   if (!nextPath.startsWith('/account')) sessionStorage.setItem('authed', 'true')
   router.push(nextPath)
@@ -53,10 +53,10 @@ function back() {
 
 onBeforeRouteUpdate((to) => {
   const toIdx = STEPS.indexOf(to.path)
-  if (toIdx > 0 && !formData.emailWork) return STEPS[0]
+  if (toIdx > 0 && !createAccountFormData.emailWork) return STEPS[0]
 })
 
-provide('formData', formData)
+provide('createAccountFormData', createAccountFormData)
 provide('next', next)
 provide('back', back)
 </script>

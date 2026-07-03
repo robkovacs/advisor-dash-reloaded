@@ -9,7 +9,8 @@ import * as yup from 'yup'
 import InputText from '@/components/InputText.vue'
 import InputPassword from '@/components/InputPassword.vue'
 import Button from '@/components/Button.vue'
-import { formData, fromLogin } from '@/use/useCreateAccountForm'
+import { fromLogin } from '@/use/useCreateAccountForm'
+import { seedCurrentUser } from '@/use/useCurrentUser'
 import { seedFirm } from '@/use/useFirm'
 import { seedClients } from '@/use/useClients'
 import { seedFirmMembers } from '@/use/useFirmMembers'
@@ -20,17 +21,6 @@ const router = useRouter()
 const ACCOUNTS = {
   tester: {
     password: 'TestingTesting123',
-    data: {
-      emailWork: 'rob@acmecpas.com',
-      firmName: 'Acme CPAs',
-      firmWebsite: 'acmecpas.com',
-      firstName: 'Rob',
-      lastName: 'Kovacs',
-      role: 'accountant',
-      username: 'tester',
-      personalEmail: 'rob@personal.com',
-      cellPhone: '(555) 867-5309',
-    },
   },
 }
 
@@ -47,7 +37,7 @@ const [password] = defineField('password')
 const login = handleSubmit((values) => {
   const account = ACCOUNTS[values.username]
   if (account && account.password === values.password) {
-    Object.assign(formData, account.data)
+    seedCurrentUser(mock.currentUser)
     seedFirm(mock.firm)
     seedClients(mock.clients)
     seedFirmMembers(mock.firmMembers)

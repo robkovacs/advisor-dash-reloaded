@@ -4,7 +4,7 @@ import IconArrowLeft from '~icons/ph/arrow-left'
 import Stack from '@/components/Stack.vue'
 import Row from '@/components/Row.vue'
 import Button from '@/components/Button.vue'
-import { formData } from '@/use/useCreateAccountForm'
+import { createAccountFormData } from '@/use/useCreateAccountForm'
 
 const next = inject('next')
 const back = inject('back')
@@ -18,7 +18,7 @@ const back = inject('back')
     </Stack>
     <p>
       No firm is using
-      <strong>@{{ formData.emailWork?.split('@')[1] }}</strong> on Advisor
+      <strong>@{{ createAccountFormData.emailWork?.split('@')[1] }}</strong> on Advisor
       Dashboard yet. You can create the firm now, and invite other firm members
       later.
     </p>

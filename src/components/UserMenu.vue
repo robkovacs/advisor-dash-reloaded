@@ -1,7 +1,8 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { formData } from '@/use/useCreateAccountForm'
+import { currentUser } from '@/use/useCurrentUser'
+import { firm } from '@/use/useFirm'
 import IconCaretRight from '~icons/ph/caret-right'
 import IconSignOut from '~icons/ph/sign-out'
 import IconMoon from '~icons/ph/moon'
@@ -13,11 +14,11 @@ import AppearanceSwitch from '@/components/AppearanceSwitch.vue'
 
 const router = useRouter()
 const fullName = computed(() =>
-  `${formData.firstName ?? ''} ${formData.lastName ?? ''}`.trim(),
+  `${currentUser.firstName ?? ''} ${currentUser.lastName ?? ''}`.trim(),
 )
-const firmName = formData.firmName ?? ''
+const firmName = computed(() => firm.name ?? '')
 const initials = computed(() =>
-  [formData.firstName, formData.lastName]
+  [currentUser.firstName, currentUser.lastName]
     .filter(Boolean)
     .map((n) => n[0].toUpperCase())
     .join(''),

@@ -10,7 +10,7 @@ import InputPassword from '@/components/InputPassword.vue'
 import Button from '@/components/Button.vue'
 import { useForm } from 'vee-validate'
 import * as yup from 'yup'
-import { formData } from '@/use/useCreateAccountForm'
+import { createAccountFormData } from '@/use/useCreateAccountForm'
 
 const next = inject('next')
 const back = inject('back')
@@ -32,8 +32,8 @@ const { defineField, handleSubmit, errors } = useForm({
       .required('Password is required'),
   }),
   initialValues: {
-    username: formData?.username ?? '',
-    password: formData?.password ?? '',
+    username: createAccountFormData?.username ?? '',
+    password: createAccountFormData?.password ?? '',
   },
 })
 

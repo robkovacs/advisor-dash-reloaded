@@ -1,3 +1,16 @@
+export const currentUser = {
+  id: 'fmu-001',
+  userId: 'usr-001',
+  firmId: 'firm-acme-001',
+  firstName: 'Rob',
+  lastName: 'Kovacs',
+  workEmail: 'rob@acmecpas.com',
+  personalEmail: 'rob@personal.com',
+  workPhone: '(555) 867-5309',
+  role: 'accountant',
+  status: 'active',
+}
+
 export const firm = {
   id: 'firm-acme-001',
   name: 'Acme CPAs',
