@@ -43,7 +43,7 @@ const showLoginNotice = computed(() => fromLogin.value && stepIndex.value === 0)
 function next(data = {}) {
   Object.assign(formData, data)
   const nextPath = STEPS[stepIndex.value + 1] ?? '/dashboard'
-  if (!nextPath.startsWith('/account')) localStorage.setItem('authed', 'true')
+  if (!nextPath.startsWith('/account')) sessionStorage.setItem('authed', 'true')
   router.push(nextPath)
 }
 

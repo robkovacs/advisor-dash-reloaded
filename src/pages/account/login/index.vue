@@ -44,7 +44,7 @@ const login = handleSubmit((values) => {
   const account = ACCOUNTS[values.username]
   if (account && account.password === values.password) {
     Object.assign(formData, account.data)
-    localStorage.setItem('authed', 'true')
+    sessionStorage.setItem('authed', 'true')
     router.push('/dashboard')
     return
   }

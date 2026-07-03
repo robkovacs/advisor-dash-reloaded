@@ -37,7 +37,7 @@ function toggle() {
 }
 
 function logout() {
-  localStorage.removeItem('authed')
+  sessionStorage.removeItem('authed')
   router.push('/welcome')
 }
 

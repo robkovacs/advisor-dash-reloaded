@@ -1,4 +1,4 @@
 <script setup>
-localStorage.removeItem('authed')
+sessionStorage.removeItem('authed')
 window.location.replace('/')
 </script>

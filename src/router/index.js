@@ -15,7 +15,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from) => {
-  const authed = localStorage.getItem('authed')
+  const authed = sessionStorage.getItem('authed')
   const publicPrefixes = ['/welcome', '/account']
   const isPublic = publicPrefixes.some(
     (p) => to.path === p || to.path.startsWith(p + '/'),
