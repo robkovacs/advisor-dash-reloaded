@@ -7,6 +7,8 @@ import FocusedLayout from '@/layouts/FocusedLayout.vue'
 import Notice from '@/components/Notice.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
 import { createAccountFormData, fromLogin } from '@/use/useCreateAccountForm'
+import { seedCurrentUser } from '@/use/useCurrentUser'
+import { seedFirm } from '@/use/useFirm'
 
 const route = useRoute()
 const router = useRouter()
@@ -43,7 +45,21 @@ const showLoginNotice = computed(() => fromLogin.value && stepIndex.value === 0)
 function next(data = {}) {
   Object.assign(createAccountFormData, data)
   const nextPath = STEPS[stepIndex.value + 1] ?? '/dashboard'
-  if (!nextPath.startsWith('/account')) sessionStorage.setItem('authed', 'true')
+  if (!nextPath.startsWith('/account')) {
+    seedCurrentUser({
+      firstName: createAccountFormData.firstName,
+      lastName: createAccountFormData.lastName,
+      workEmail: createAccountFormData.emailWork,
+      workPhone: createAccountFormData.cellPhone,
+      role: createAccountFormData.role,
+      status: 'active',
+    })
+    seedFirm({
+      name: createAccountFormData.firmName,
+      website: createAccountFormData.firmWebsite,
+    })
+    sessionStorage.setItem('authed', 'true')
+  }
   router.push(nextPath)
 }
 
