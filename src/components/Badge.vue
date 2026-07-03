@@ -1,25 +1,42 @@
+<script setup>
+defineProps({
+  variant: {
+    type: String,
+    default: 'default',
+  },
+})
+</script>
+
 <template>
-  <span class="badge">
+  <span class="badge" :data-variant="variant">
     <slot />
   </span>
 </template>
 
 <style scoped>
 .badge {
-  background-color: var(--color-bg-muted);
-  color: var(--color-text-muted);
+  display: inline-flex;
+  align-items: center;
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-xs);
   line-height: 1;
-  padding: var(--space-1) var(--space-2);
+  padding: var(--space-1) var(--space-3);
   border-radius: var(--border-radius-max);
+  white-space: nowrap;
 }
 
-.has-badge {
-  vertical-align: baseline;
+.badge[data-variant="default"] {
+  background-color: var(--color-bg-muted);
+  color: var(--color-text-muted);
 }
 
-.has-badge .badge {
-  margin-left: var(--space-2);
+.badge[data-variant="success"] {
+  background-color: var(--color-success-subtle);
+  color: var(--color-success-text);
+}
+
+.badge[data-variant="error"] {
+  background-color: var(--color-error-subtle);
+  color: var(--color-error);
 }
 </style>

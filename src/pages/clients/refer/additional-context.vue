@@ -22,7 +22,7 @@ const back = inject('back')
       <InputTextarea label="Anything else we should know?" optional />
     </form>
     <Row gap="4">
-      <Button variant="primary" @click="next()">Continue</Button>
+      <Button variant="primary" @click="next()">Submit</Button>
       <Button variant="secondary" @click="back()">Back</Button>
     </Row>
   </Stack>

@@ -7,7 +7,9 @@ import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import Stack from '@/components/Stack.vue'
 import Columns from '@/components/Columns.vue'
 import Stepper from '@/components/Stepper.vue'
-import { referFormData } from '@/use/useReferClientForm'
+import { referFormData, clearReferForm } from '@/use/useReferClientForm'
+import { clients } from '@/use/useClients'
+import { firm } from '@/use/useFirm'
 
 const route = useRoute()
 const router = useRouter()
@@ -67,7 +69,24 @@ const steps = computed(() =>
 function next(data = {}) {
   Object.assign(referFormData, data)
   const nextPath = STEPS[stepIndex.value + 1]
-  if (nextPath) router.push(nextPath)
+  if (nextPath) {
+    router.push(nextPath)
+  } else {
+    const client = {
+      id: crypto.randomUUID(),
+      firmId: firm.id ?? null,
+      companyId: crypto.randomUUID(),
+      companyName: referFormData.companyName,
+      firstName: referFormData.firstName,
+      lastName: referFormData.lastName,
+      email: referFormData.email,
+      status: 'pending',
+      permissions: [],
+    }
+    clients.value.push(client)
+    clearReferForm()
+    router.push(`/clients/${client.id}`)
+  }
 }
 
 function back() {
