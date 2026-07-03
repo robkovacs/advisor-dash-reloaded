@@ -137,7 +137,7 @@ const hasSetupItems = computed(() =>
 
       <Stack gap="3" align="center">
         <Button disabled>Go to firm dashboard</Button>
-        <p class="text-sm text-muted">
+        <p class="text-sm">
           You need to add at least one client before you can view your firm
           dashboard.
         </p>

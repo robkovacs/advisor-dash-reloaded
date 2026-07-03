@@ -151,7 +151,6 @@ onBeforeUnmount(() =>
 
 .firm-name {
   font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
   font-weight: var(--font-weight-regular);
 }
 

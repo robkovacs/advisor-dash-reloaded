@@ -87,7 +87,6 @@ a {
 
 .intro {
   font-size: var(--font-size-lg);
-  color: var(--color-text-muted);
   margin: 0;
   max-width: 66ch;
   text-wrap: pretty;
