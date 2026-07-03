@@ -37,8 +37,7 @@ function toggle() {
 }
 
 function logout() {
-  sessionStorage.removeItem('authed')
-  router.push('/welcome')
+  router.push('/account/logout')
 }
 
 function onDocumentClick(e) {

@@ -10,6 +10,10 @@ import InputText from '@/components/InputText.vue'
 import InputPassword from '@/components/InputPassword.vue'
 import Button from '@/components/Button.vue'
 import { formData, fromLogin } from '@/use/useCreateAccountForm'
+import { seedFirm } from '@/use/useFirm'
+import { seedClients } from '@/use/useClients'
+import { seedFirmMembers } from '@/use/useFirmMembers'
+import * as mock from '@/data/mockTesterAccount'
 
 const router = useRouter()
 
@@ -44,6 +48,9 @@ const login = handleSubmit((values) => {
   const account = ACCOUNTS[values.username]
   if (account && account.password === values.password) {
     Object.assign(formData, account.data)
+    seedFirm(mock.firm)
+    seedClients(mock.clients)
+    seedFirmMembers(mock.firmMembers)
     sessionStorage.setItem('authed', 'true')
     router.push('/dashboard')
     return
