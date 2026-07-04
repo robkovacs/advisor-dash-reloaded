@@ -20,8 +20,8 @@ const crumbs = [
   { label: client.value?.companyName ?? 'Client' },
 ]
 
-const statusLabel = { accepted: 'Active', pending: 'Pending', declined: 'Declined' }
-const statusVariant = { accepted: 'success', pending: 'default', declined: 'error' }
+const statusLabel = { active: 'Active', pending: 'Pending', declined: 'Declined' }
+const statusVariant = { active: 'success', pending: 'default', declined: 'error' }
 </script>
 
 <template>

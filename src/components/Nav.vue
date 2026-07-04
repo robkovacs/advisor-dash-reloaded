@@ -36,6 +36,7 @@ router.afterEach(() => {
           class="menu-button"
           variant="tertiary"
           size="small"
+          icon-only
           :aria-label="open ? 'Close menu' : 'Open menu'"
           @click="open = !open"
         >

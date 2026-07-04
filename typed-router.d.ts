@@ -194,6 +194,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/dashboard/internals/FirmDashboard': RouteRecordInfo<
+      '/dashboard/internals/FirmDashboard',
+      '/dashboard/internals/FirmDashboard',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/dashboard/internals/FirmSetup': RouteRecordInfo<
       '/dashboard/internals/FirmSetup',
       '/dashboard/internals/FirmSetup',
@@ -396,6 +403,12 @@ declare module 'vue-router/auto-routes' {
     'src/pages/dashboard/index.vue': {
       routes:
         | '/dashboard/'
+      views:
+        | never
+    }
+    'src/pages/dashboard/internals/FirmDashboard.vue': {
+      routes:
+        | '/dashboard/internals/FirmDashboard'
       views:
         | never
     }

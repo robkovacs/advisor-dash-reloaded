@@ -74,7 +74,7 @@ export const clients = [
     firstName: 'Janet',
     lastName: 'Fowler',
     email: 'janet@riverstonelog.com',
-    status: 'accepted',
+    status: 'active',
     permissions: ['payroll_admin', 'benefits_admin'],
   },
   {
@@ -85,7 +85,7 @@ export const clients = [
     firstName: 'Tom',
     lastName: 'Ibarra',
     email: 'tom@bluebellcreative.com',
-    status: 'accepted',
+    status: 'active',
     permissions: ['payroll_admin'],
   },
   {
@@ -96,7 +96,7 @@ export const clients = [
     firstName: 'Donna',
     lastName: 'Park',
     email: 'donna@northgatemedical.com',
-    status: 'accepted',
+    status: 'active',
     permissions: ['payroll_admin', 'benefits_admin', 'hr_admin'],
   },
   {
@@ -107,7 +107,7 @@ export const clients = [
     firstName: 'Carlos',
     lastName: 'Reyes',
     email: 'carlos@solerabrewing.com',
-    status: 'accepted',
+    status: 'active',
     permissions: ['payroll_admin'],
   },
   {
@@ -118,7 +118,7 @@ export const clients = [
     firstName: 'Lisa',
     lastName: 'Drummond',
     email: 'lisa@halcyonsoftware.com',
-    status: 'accepted',
+    status: 'active',
     permissions: ['payroll_admin', 'benefits_admin'],
   },
   {
@@ -151,7 +151,7 @@ export const clients = [
     firstName: 'Greg',
     lastName: 'Tanaka',
     email: 'greg@ironwoodfab.com',
-    status: 'declined',
+    status: 'active',
     permissions: [],
   },
 ]

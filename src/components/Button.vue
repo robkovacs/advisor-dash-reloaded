@@ -12,7 +12,10 @@ defineProps({
     type: String,
     default: 'secondary',
   },
-
+  iconOnly: {
+    type: Boolean,
+    default: false,
+  },
   size: {
     type: String,
     default: null,
@@ -24,7 +27,12 @@ defineProps({
   <component
     :is="to ? 'router-link' : 'button'"
     v-bind="to ? { to } : { type }"
-    :class="['btn', `btn--${variant}`, size ? `btn--${size}` : '']"
+    :class="[
+      'btn',
+      `btn--${variant}`,
+      size ? `btn--${size}` : '',
+      iconOnly ? `btn--icon-only` : '',
+    ]"
   >
     <slot />
   </component>
@@ -72,8 +80,17 @@ defineProps({
 
 .btn--small {
   height: 2.25rem;
+  padding: var(--space-2) var(--space-3);
   font-size: var(--font-size-sm);
-  padding: var(--space-2) var(--space-4);
+}
+
+.btn--icon-only {
+  width: 3rem;
+  padding: var(--space-2);
+}
+
+.btn--icon-only.btn--small {
+  width: 2.25rem;
 }
 
 .btn:disabled,
