@@ -14,7 +14,9 @@ defineProps({
 <template>
   <h1 class="page-header">
     <template v-for="(ancestor, i) in ancestors" :key="i">
-      <RouterLink v-if="ancestor.to" :to="ancestor.to" class="ancestor">{{ ancestor.label }}</RouterLink>
+      <RouterLink v-if="ancestor.to" :to="ancestor.to" class="ancestor">{{
+        ancestor.label
+      }}</RouterLink>
       <span v-else class="ancestor">{{ ancestor.label }}</span>
       <span class="separator" aria-hidden="true">/</span>
     </template>
@@ -26,7 +28,7 @@ defineProps({
 .page-header {
   display: flex;
   align-items: baseline;
-  gap: var(--space-2);
+  gap: var(--space-3);
   flex-wrap: wrap;
 }
 
@@ -34,6 +36,10 @@ defineProps({
   font-weight: var(--font-weight-regular);
   color: var(--color-text-muted);
   text-decoration: none;
+}
+
+.separator {
+  opacity: 0.5;
 }
 
 @media (hover: hover) {
