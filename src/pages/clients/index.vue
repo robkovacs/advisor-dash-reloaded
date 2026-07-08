@@ -9,6 +9,8 @@ import IconCaretDownFill from '~icons/ph/caret-down-fill'
 import Menu from '@/components/Menu.vue'
 import MenuOption from '@/components/MenuOption.vue'
 import Badge from '@/components/Badge.vue'
+import EmptyState from '@/components/EmptyState.vue'
+import SegmentedControl from '@/components/SegmentedControl.vue'
 
 definePage({ meta: { title: 'Clients' } })
 
@@ -48,30 +50,31 @@ const sorted = computed(() => {
 </script>
 
 <template>
-  <Stack gap="8">
-    <Row align="center" justify="space-between">
-      <h1>Clients</h1>
-      <Menu placement="bottom-end">
-        <template #trigger="{ toggle, isOpen }">
-          <Button variant="primary" :aria-expanded="isOpen" @click="toggle">
-            Add client <IconCaretDownFill />
-          </Button>
-        </template>
-        <MenuOption to="/clients/refer">Refer a client</MenuOption>
-        <MenuOption to="/clients/enroll">Enroll a client</MenuOption>
-      </Menu>
-    </Row>
-    <Row gap="2" class="filter-row">
-      <button
-        v-for="f in filters"
-        :key="f.label"
-        class="filter-btn"
-        :class="{ 'filter-btn--active': activeFilter === f.value }"
-        @click="setFilter(f.value)"
-      >
-        {{ f.label }}
-      </button>
-    </Row>
+  <Stack gap="6">
+    <Stack gap="4">
+      <Row align="center" justify="space-between">
+        <h1>Clients</h1>
+        <Menu placement="bottom-end">
+          <template #trigger="{ toggle, isOpen }">
+            <Button
+              variant="primary"
+              size="small"
+              :aria-expanded="isOpen"
+              @click="toggle"
+            >
+              Add client <IconCaretDownFill />
+            </Button>
+          </template>
+          <MenuOption to="/clients/refer">Refer a client</MenuOption>
+          <MenuOption to="/clients/enroll">Enroll a client</MenuOption>
+        </Menu>
+      </Row>
+      <SegmentedControl
+        :options="filters"
+        :model-value="activeFilter"
+        @update:model-value="setFilter"
+      />
+    </Stack>
     <Stack v-if="sorted.length" gap="0" class="client-list">
       <RouterLink
         v-for="client in sorted"
@@ -90,18 +93,20 @@ const sorted = computed(() => {
         </span>
       </RouterLink>
     </Stack>
-    <Stack v-else align="center" gap="4" class="empty">
-      <p>No {{ activeFilter ? statusLabel[activeFilter].toLowerCase() : '' }} clients yet.</p>
+    <EmptyState
+      v-else
+      :message="`No ${activeFilter ? statusLabel[activeFilter].toLowerCase() + ' ' : ''}clients yet.`"
+    >
       <Menu placement="bottom-end">
         <template #trigger="{ toggle, isOpen }">
-          <Button variant="primary" :aria-expanded="isOpen" @click="toggle">
+          <Button variant="secondary" :aria-expanded="isOpen" @click="toggle">
             Add client <IconCaretDownFill />
           </Button>
         </template>
         <MenuOption to="/clients/refer">Refer a client</MenuOption>
         <MenuOption to="/clients/enroll">Enroll a client</MenuOption>
       </Menu>
-    </Stack>
+    </EmptyState>
   </Stack>
 </template>
 
@@ -155,43 +160,5 @@ const sorted = computed(() => {
 
 .contact {
   color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
-}
-
-.empty {
-  padding: var(--space-16);
-  color: var(--color-text-muted);
-}
-
-.filter-row {
-  flex-wrap: wrap;
-}
-
-.filter-btn {
-  padding: var(--space-1) var(--space-3);
-  border: 1px solid var(--color-line);
-  border-radius: var(--border-radius-max);
-  background: var(--color-bg);
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
-  font-family: inherit;
-  cursor: pointer;
-  transition:
-    background 0.1s,
-    color 0.1s,
-    border-color 0.1s;
-}
-
-@media (hover: hover) {
-  .filter-btn:hover {
-    background: var(--color-bg-subtle);
-    color: var(--color-text);
-  }
-}
-
-.filter-btn--active {
-  background: var(--color-bg-muted);
-  color: var(--color-text);
-  border-color: var(--color-input-border);
 }
 </style>

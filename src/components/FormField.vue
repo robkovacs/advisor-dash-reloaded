@@ -51,7 +51,6 @@ const errorId = useId()
 }
 
 .helper {
-  font-size: var(--font-size-sm);
   margin-top: calc(-1 * var(--space-1));
   color: var(--color-text-muted);
 }

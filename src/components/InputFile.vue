@@ -142,10 +142,6 @@ function removeFile(index) {
   color: var(--color-text-muted);
 }
 
-.dropzone__description {
-  font-size: var(--font-size-sm);
-}
-
 .dropzone--over {
   background-color: var(--color-accent-subtle);
   border-color: var(--color-accent-border);
@@ -181,7 +177,6 @@ function removeFile(index) {
   border-radius: var(--border-radius-md);
   background: transparent;
   padding: var(--space-2) var(--space-4);
-  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);
   font-family: inherit;
   color: var(--color-text);
@@ -217,7 +212,6 @@ function removeFile(index) {
   border: 1px solid var(--color-line);
   border-radius: var(--border-radius-md);
   padding: var(--space-2) var(--space-3);
-  font-size: var(--font-size-sm);
 }
 
 .file-list-item__name {

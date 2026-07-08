@@ -49,8 +49,8 @@ defineProps({
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  padding: var(--space-2) var(--space-4);
-  height: 3rem;
+  padding: var(--space-1) var(--space-3);
+  height: 2.5rem;
   border: 1px solid transparent;
   border-radius: var(--border-radius-md);
   font-size: var(--font-size-md);
@@ -81,7 +81,6 @@ defineProps({
 .btn--small {
   height: 2.25rem;
   padding: var(--space-2) var(--space-3);
-  font-size: var(--font-size-sm);
 }
 
 .btn--icon-only {

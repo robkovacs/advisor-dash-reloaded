@@ -10,7 +10,6 @@ defineProps({
 
 <style scoped>
 label {
-  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);
   color: var(--color-text);
 }

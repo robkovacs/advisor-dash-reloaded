@@ -4,7 +4,7 @@ import { useRoute } from 'vue-router'
 import { firmMembers } from '@/use/useFirmMembers'
 import Stack from '@/components/Stack.vue'
 import Row from '@/components/Row.vue'
-import Breadcrumbs from '@/components/Breadcrumbs.vue'
+import PageHeader from '@/components/PageHeader.vue'
 import Badge from '@/components/Badge.vue'
 import Button from '@/components/Button.vue'
 import FocusedLayout from '@/layouts/FocusedLayout.vue'
@@ -13,12 +13,11 @@ definePage({ meta: { title: 'Firm member' } })
 
 const route = useRoute()
 
-const member = computed(() => firmMembers.value.find((m) => m.id === route.params.id))
+const member = computed(() =>
+  firmMembers.value.find((m) => m.id === route.params.id),
+)
 
-const crumbs = [
-  { label: 'Firm members', to: '/firm-members' },
-  { label: member.value ? `${member.value.firstName} ${member.value.lastName}` : 'Firm member' },
-]
+const ancestors = [{ label: 'Firm members', to: '/firm-members' }]
 
 const roleLabel = {
   accountant: 'Accountant',
@@ -28,16 +27,13 @@ const roleLabel = {
 </script>
 
 <template>
-  <Stack v-if="member" gap="8">
-    <Stack gap="4">
-      <Breadcrumbs :items="crumbs" />
-      <Row align="center" justify="space-between">
-        <h1>{{ member.firstName }} {{ member.lastName }}</h1>
-        <Badge :variant="member.status === 'active' ? 'success' : 'default'">
-          {{ member.status === 'active' ? 'Active' : 'Pending' }}
-        </Badge>
-      </Row>
-    </Stack>
+  <Stack v-if="member" gap="6">
+    <Row align="center" justify="space-between">
+      <PageHeader :ancestors="ancestors" :title="`${member.firstName} ${member.lastName}`" />
+      <Badge :variant="member.status === 'active' ? 'success' : 'default'">
+        {{ member.status === 'active' ? 'Active' : 'Pending' }}
+      </Badge>
+    </Row>
     <Stack gap="2">
       <h3>Role</h3>
       <p>{{ roleLabel[member.role] ?? member.role }}</p>
@@ -49,7 +45,7 @@ const roleLabel = {
     </Stack>
   </Stack>
   <FocusedLayout v-else>
-    <Stack gap="8">
+    <Stack gap="6">
       <h1>Page not found</h1>
       <p>This page doesn't exist.</p>
       <Button to="/" variant="primary">Go home</Button>

@@ -3,7 +3,7 @@ import { computed, provide, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 definePage({ meta: { title: 'Refer a client' } })
-import Breadcrumbs from '@/components/Breadcrumbs.vue'
+import PageHeader from '@/components/PageHeader.vue'
 import Stack from '@/components/Stack.vue'
 import Columns from '@/components/Columns.vue'
 import Stepper from '@/components/Stepper.vue'
@@ -28,10 +28,7 @@ const STEP_LABELS = [
   'Additional context',
 ]
 
-const crumbs = [
-  { label: 'Clients', to: '/clients' },
-  { label: 'Refer a client' },
-]
+const ancestors = [{ label: 'Clients', to: '/clients' }]
 
 const isBulk = computed(() => route.path === '/clients/refer/bulk')
 
@@ -101,15 +98,12 @@ provide('back', back)
 </script>
 
 <template>
-  <Stack gap="8">
-    <Stack gap="4">
-      <Breadcrumbs :items="crumbs" />
-      <h1 v-if="!isBulk">Refer a client</h1>
-    </Stack>
-    <template v-if="isBulk">
-      <RouterView :key="$route.path" />
-    </template>
-    <Columns v-else layout="1fr 2fr 1fr" gap="12">
+  <template v-if="isBulk">
+    <RouterView :key="$route.path" />
+  </template>
+  <Stack v-else gap="6">
+    <PageHeader :ancestors="ancestors" title="Refer a client" />
+    <Columns layout="12rem minmax(0, 24rem) 1fr" gap="6">
       <Stepper :steps="steps" />
       <Transition :name="transition" mode="out-in">
         <RouterView :key="$route.path" />

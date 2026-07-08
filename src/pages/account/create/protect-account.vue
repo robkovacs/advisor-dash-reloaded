@@ -38,7 +38,7 @@ const onSubmit = handleSubmit((values) => {
 </script>
 
 <template>
-  <Stack gap="8">
+  <Stack gap="6">
     <Stack gap="4">
       <Button variant="link" size="small" @click="back()">
         <IconArrowLeft />Back

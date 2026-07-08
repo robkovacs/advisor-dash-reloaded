@@ -32,14 +32,8 @@ main {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  padding: var(--space-12) var(--space-6);
+  padding: var(--space-6);
   align-items: stretch;
   container-type: inline-size;
-}
-
-@media (--breakpoint-sm) {
-  main {
-    padding: var(--space-12) var(--space-20);
-  }
 }
 </style>

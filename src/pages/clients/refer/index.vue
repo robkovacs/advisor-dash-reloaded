@@ -49,11 +49,11 @@ const onSubmit = handleSubmit((values) => next(values))
 </script>
 
 <template>
-  <Stack gap="8">
+  <Stack gap="6">
     <Notice center-icon>
       <Row align="center" justify="space-between" gap="4">
         <span>Have a lot of clients to refer?</span>
-        <Button variant="secondary" to="/clients/refer-bulk" size="small"
+        <Button variant="secondary" to="/clients/refer/bulk" size="small"
           >Bulk upload</Button
         >
       </Row>

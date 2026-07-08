@@ -19,10 +19,9 @@ defineProps({
 
 <style scoped>
 .error-wrap {
-  font-size: var(--font-size-sm);
   display: grid;
   grid-template-rows: 0fr;
-  min-height: calc(var(--font-size-sm) * var(--line-height-body));
+  min-height: calc(var(--font-size-md) * var(--line-height-body));
   transition: grid-template-rows 250ms ease-in;
 }
 
@@ -42,7 +41,7 @@ defineProps({
 .icon {
   flex: 0 0 1em;
   margin-top: calc(
-    ((var(--font-size-sm) * var(--line-height-body)) - var(--font-size-sm)) / 2
+    ((var(--font-size-md) * var(--line-height-body)) - var(--font-size-md)) / 2
   );
 }
 </style>

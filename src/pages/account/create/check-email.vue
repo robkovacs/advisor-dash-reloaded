@@ -28,7 +28,10 @@ const [emailWork] = defineField('emailWork')
 
 const onSubmit = handleSubmit((values) => {
   window.open(
-    router.resolve({ path: '/account/confirm-email', query: { email: values.emailWork } }).href,
+    router.resolve({
+      path: '/account/confirm-email',
+      query: { email: values.emailWork },
+    }).href,
     '_blank',
   )
   next({ emailWork: values.emailWork })
@@ -36,7 +39,7 @@ const onSubmit = handleSubmit((values) => {
 </script>
 
 <template>
-  <Stack gap="8">
+  <Stack gap="6">
     <Stack gap="4">
       <Button to="/welcome" variant="link" size="small"
         ><IconArrowLeft />Back</Button

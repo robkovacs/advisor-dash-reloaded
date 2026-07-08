@@ -149,6 +149,7 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | '/clients/refer/'
       | '/clients/refer/additional-context'
+      | '/clients/refer/bulk/'
       | '/clients/refer/company-contact'
       | '/clients/refer/company-details'
     >,
@@ -166,6 +167,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/clients/refer/bulk/': RouteRecordInfo<
+      '/clients/refer/bulk/',
+      '/clients/refer/bulk',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/clients/refer/company-contact': RouteRecordInfo<
       '/clients/refer/company-contact',
       '/clients/refer/company-contact',
@@ -176,13 +184,6 @@ declare module 'vue-router/auto-routes' {
     '/clients/refer/company-details': RouteRecordInfo<
       '/clients/refer/company-details',
       '/clients/refer/company-details',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/clients/refer-bulk/': RouteRecordInfo<
-      '/clients/refer-bulk/',
-      '/clients/refer-bulk',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -365,6 +366,7 @@ declare module 'vue-router/auto-routes' {
         | '/clients/refer'
         | '/clients/refer/'
         | '/clients/refer/additional-context'
+        | '/clients/refer/bulk/'
         | '/clients/refer/company-contact'
         | '/clients/refer/company-details'
       views:
@@ -382,6 +384,12 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
+    'src/pages/clients/refer/bulk/index.vue': {
+      routes:
+        | '/clients/refer/bulk/'
+      views:
+        | never
+    }
     'src/pages/clients/refer/company-contact.vue': {
       routes:
         | '/clients/refer/company-contact'
@@ -391,12 +399,6 @@ declare module 'vue-router/auto-routes' {
     'src/pages/clients/refer/company-details.vue': {
       routes:
         | '/clients/refer/company-details'
-      views:
-        | never
-    }
-    'src/pages/clients/refer-bulk/index.vue': {
-      routes:
-        | '/clients/refer-bulk/'
       views:
         | never
     }

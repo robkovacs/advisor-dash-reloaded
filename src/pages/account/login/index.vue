@@ -15,12 +15,18 @@ import { seedFirm } from '@/use/useFirm'
 import { seedClients } from '@/use/useClients'
 import { seedFirmMembers } from '@/use/useFirmMembers'
 import * as mock from '@/data/mockTesterAccount'
+import * as mockOnboarded from '@/data/mockOnboardedAccount'
 
 const router = useRouter()
 
 const ACCOUNTS = {
   tester: {
     password: 'TestingTesting123',
+    data: mock,
+  },
+  onboarded: {
+    password: 'TestingTesting123',
+    data: mockOnboarded,
   },
 }
 
@@ -37,10 +43,11 @@ const [password] = defineField('password')
 const login = handleSubmit((values) => {
   const account = ACCOUNTS[values.username]
   if (account && account.password === values.password) {
-    seedCurrentUser(mock.currentUser)
-    seedFirm(mock.firm)
-    seedClients(mock.clients)
-    seedFirmMembers(mock.firmMembers)
+    const data = account.data
+    seedCurrentUser(data.currentUser)
+    seedFirm(data.firm)
+    seedClients(data.clients)
+    seedFirmMembers(data.firmMembers)
     sessionStorage.setItem('authed', 'true')
     router.push('/dashboard')
     return
@@ -194,7 +201,6 @@ footer {
   padding: var(--space-12);
   padding-top: 0;
   gap: var(--space-4);
-  font-size: var(--font-size-sm);
   color: var(--color-text-muted);
 }
 

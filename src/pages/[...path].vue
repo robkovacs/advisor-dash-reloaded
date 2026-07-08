@@ -8,7 +8,7 @@ definePage({ meta: { noLayout: true, title: 'Page not found' } })
 
 <template>
   <FocusedLayout>
-    <Stack gap="8">
+    <Stack gap="6">
       <h1>Page not found</h1>
       <p>This page doesn't exist.</p>
       <Button to="/" variant="primary">Go home</Button>

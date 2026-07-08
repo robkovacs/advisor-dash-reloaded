@@ -4,7 +4,7 @@ import { useRoute } from 'vue-router'
 import { clients } from '@/use/useClients'
 import Stack from '@/components/Stack.vue'
 import Row from '@/components/Row.vue'
-import Breadcrumbs from '@/components/Breadcrumbs.vue'
+import PageHeader from '@/components/PageHeader.vue'
 import Badge from '@/components/Badge.vue'
 import Button from '@/components/Button.vue'
 import FocusedLayout from '@/layouts/FocusedLayout.vue'
@@ -13,26 +13,32 @@ definePage({ meta: { title: 'Client' } })
 
 const route = useRoute()
 
-const client = computed(() => clients.value.find((c) => c.id === route.params.id))
+const client = computed(() =>
+  clients.value.find((c) => c.id === route.params.id),
+)
 
-const crumbs = [
-  { label: 'Clients', to: '/clients' },
-  { label: client.value?.companyName ?? 'Client' },
-]
+const ancestors = [{ label: 'Clients', to: '/clients' }]
 
-const statusLabel = { active: 'Active', pending: 'Pending', declined: 'Declined' }
-const statusVariant = { active: 'success', pending: 'default', declined: 'error' }
+const statusLabel = {
+  active: 'Active',
+  pending: 'Pending',
+  declined: 'Declined',
+}
+const statusVariant = {
+  active: 'success',
+  pending: 'default',
+  declined: 'error',
+}
 </script>
 
 <template>
-  <Stack v-if="client" gap="8">
-    <Stack gap="4">
-      <Breadcrumbs :items="crumbs" />
-      <Row align="center" justify="space-between">
-        <h1>{{ client.companyName }}</h1>
-        <Badge :variant="statusVariant[client.status]">{{ statusLabel[client.status] }}</Badge>
-      </Row>
-    </Stack>
+  <Stack v-if="client" gap="6">
+    <Row align="center" justify="space-between">
+      <PageHeader :ancestors="ancestors" :title="client.companyName" />
+      <Badge :variant="statusVariant[client.status]">{{
+        statusLabel[client.status]
+      }}</Badge>
+    </Row>
     <Stack gap="2">
       <h3>Primary contact</h3>
       <p>{{ client.firstName }} {{ client.lastName }}</p>
@@ -40,7 +46,7 @@ const statusVariant = { active: 'success', pending: 'default', declined: 'error'
     </Stack>
   </Stack>
   <FocusedLayout v-else>
-    <Stack gap="8">
+    <Stack gap="6">
       <h1>Page not found</h1>
       <p>This page doesn't exist.</p>
       <Button to="/" variant="primary">Go home</Button>

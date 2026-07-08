@@ -29,7 +29,7 @@ const activeMembers = computed(() =>
 </script>
 
 <template>
-  <Stack gap="12">
+  <Stack gap="6">
     <Row align="flex-start" justify="space-between">
       <Stack gap="2">
         <h1>Welcome back, {{ userFirstName }}!</h1>
@@ -74,7 +74,7 @@ const activeMembers = computed(() =>
       </div>
     </Stack>
 
-    <Stack v-if="pendingClients.length" gap="6">
+    <Stack v-if="pendingClients.length" gap="4">
       <h3>Needs attention</h3>
       <div class="attention-list">
         <RouterLink
@@ -143,7 +143,7 @@ const activeMembers = computed(() =>
 }
 
 .stat-label {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-lg);
   color: var(--color-text-muted);
   margin-bottom: var(--space-1);
 }
@@ -195,12 +195,12 @@ const activeMembers = computed(() =>
 }
 
 .attention-contact {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-md);
   color: var(--color-text-muted);
 }
 
 .attention-cta {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-md);
   color: var(--color-text-muted);
 }
 </style>

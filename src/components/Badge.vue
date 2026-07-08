@@ -18,24 +18,24 @@ defineProps({
   display: inline-flex;
   align-items: center;
   font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   line-height: 1;
   padding: var(--space-1) var(--space-3);
   border-radius: var(--border-radius-max);
   white-space: nowrap;
 }
 
-.badge[data-variant="default"] {
+.badge[data-variant='default'] {
   background-color: var(--color-bg-muted);
   color: var(--color-text-muted);
 }
 
-.badge[data-variant="success"] {
+.badge[data-variant='success'] {
   background-color: var(--color-success-subtle);
   color: var(--color-success-text);
 }
 
-.badge[data-variant="error"] {
+.badge[data-variant='error'] {
   background-color: var(--color-error-subtle);
   color: var(--color-error);
 }

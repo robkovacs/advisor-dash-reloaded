@@ -15,13 +15,15 @@ const roleLabel = {
 
 const sorted = computed(() =>
   [...firmMembers.value].sort((a, b) =>
-    `${a.lastName} ${a.firstName}`.localeCompare(`${b.lastName} ${b.firstName}`),
+    `${a.lastName} ${a.firstName}`.localeCompare(
+      `${b.lastName} ${b.firstName}`,
+    ),
   ),
 )
 </script>
 
 <template>
-  <Stack gap="8">
+  <Stack gap="6">
     <Row align="center" justify="space-between">
       <h1>Firm members</h1>
     </Row>
@@ -95,7 +97,6 @@ const sorted = computed(() =>
 
 .role {
   color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
 }
 
 .empty {

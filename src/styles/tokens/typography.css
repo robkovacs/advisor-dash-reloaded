@@ -3,15 +3,14 @@
     --font-family-monospace: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --font-family-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
 
-    --font-size-xs: 0.75rem;
-    --font-size-sm: 0.875rem;
-    --font-size-md: 1rem;
-    --font-size-lg: 1.25rem;
-    --font-size-xl: 1.5rem;
-    --font-size-2xl: 2rem;
+    --font-size-sm: 0.75rem;    
+    --font-size-md: 0.875rem;        
+    --font-size-lg: 1rem;    
+    --font-size-xl: 1.25rem;     
+    --font-size-2xl: 1.5rem;   
 
-    --line-height-body: 1.38;
-    --line-height-heading: 0.94;
+    --line-height-body: 1.5;
+    --line-height-heading: 1.25;
 
     --font-weight-regular: 400;
     --font-weight-bold: 700;

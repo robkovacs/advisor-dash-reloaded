@@ -93,7 +93,7 @@ const isLast = computed(() =>
 .step__label {
   align-self: start;
   margin-top: 0.125rem;
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-4);
   font-size: var(--font-size-md);
   line-height: 1.5rem;
   color: var(--color-text-muted);

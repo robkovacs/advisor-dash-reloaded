@@ -19,7 +19,6 @@ import IconCaretDown from '~icons/ph/caret-down'
   display: flex;
   gap: var(--space-2);
   border-radius: var(--border-radius-md);
-  font-size: var(--font-size-sm);
   align-items: center;
   background-color: transparent;
   border: 1px solid var(--color-input-border);

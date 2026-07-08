@@ -47,48 +47,48 @@ onBeforeUnmount(() => mq.removeEventListener('change', onMqChange))
 
 <template>
   <div class="user-menu">
-  <Menu ref="menuRef" :placement="placement" width="16rem">
-    <template #trigger="{ toggle, isOpen }">
-      <button class="user-menu-btn" :aria-expanded="isOpen" @click="toggle">
-        <Row align="center" justify="space-between">
-          <Row align="center" gap="3" class="user-menu-identity">
-            <div class="avatar">{{ initials }}</div>
-            <Stack gap="0" align="flex-start" class="user-info">
-              <span class="full-name">{{ fullName }}</span>
-              <span class="firm-name">{{ firmName }}</span>
-            </Stack>
+    <Menu ref="menuRef" :placement="placement" width="16rem">
+      <template #trigger="{ toggle, isOpen }">
+        <button class="user-menu-btn" :aria-expanded="isOpen" @click="toggle">
+          <Row align="center" justify="space-between">
+            <Row align="center" gap="3" class="user-menu-identity">
+              <div class="avatar">{{ initials }}</div>
+              <Stack gap="0" align="flex-start" class="user-info">
+                <span class="full-name">{{ fullName }}</span>
+                <span class="firm-name">{{ firmName }}</span>
+              </Stack>
+            </Row>
+            <IconCaretRight class="caret caret--right" />
+            <IconCaretDown class="caret caret--down" />
           </Row>
-          <IconCaretRight class="caret caret--right" />
-          <IconCaretDown class="caret caret--down" />
-        </Row>
-      </button>
-    </template>
+        </button>
+      </template>
 
-    <MenuOption @click="logout">
-      <Row align="center" gap="3">
-        <IconSignOut class="menu-icon" />
-        Log out
-      </Row>
-    </MenuOption>
-    <MenuOption inert>
-      <Row align="center" justify="space-between" class="inert-row">
+      <MenuOption @click="logout">
         <Row align="center" gap="3">
-          <IconGlobeSimple class="menu-icon" />
-          Language
+          <IconSignOut class="menu-icon" />
+          Log out
         </Row>
-        <LanguageSwitcher />
-      </Row>
-    </MenuOption>
-    <MenuOption inert>
-      <Row align="center" justify="space-between">
-        <Row align="center" gap="3">
-          <IconMoon class="menu-icon" />
-          Dark mode
+      </MenuOption>
+      <MenuOption inert>
+        <Row align="center" justify="space-between" class="inert-row">
+          <Row align="center" gap="3">
+            <IconGlobeSimple class="menu-icon" />
+            Language
+          </Row>
+          <LanguageSwitcher />
         </Row>
-        <AppearanceSwitch />
-      </Row>
-    </MenuOption>
-  </Menu>
+      </MenuOption>
+      <MenuOption inert>
+        <Row align="center" justify="space-between">
+          <Row align="center" gap="3">
+            <IconMoon class="menu-icon" />
+            Dark mode
+          </Row>
+          <AppearanceSwitch />
+        </Row>
+      </MenuOption>
+    </Menu>
   </div>
 </template>
 
@@ -132,8 +132,7 @@ onBeforeUnmount(() => mq.removeEventListener('change', onMqChange))
 
 .caret {
   flex-shrink: 0;
-  font-size: var(--font-size-sm);
-  margin: calc((2.25rem - var(--font-size-sm)) / 2);
+  margin: calc((2.25rem - var(--font-size-md)) / 4);
 }
 
 .caret--right {
@@ -168,7 +167,7 @@ onBeforeUnmount(() => mq.removeEventListener('change', onMqChange))
 }
 
 .firm-name {
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-regular);
 }
 

@@ -16,7 +16,7 @@ defineProps({
 <template>
   <div class="firm-setup-card">
     <Stack v-if="variant === 'primary'" gap="6" class="primary-layout">
-      <Stack gap="4" class="primary-content">
+      <Stack gap="3" class="primary-content">
         <Row align="center" gap="4">
           <IconBox><slot name="icon" /></IconBox>
           <h3>{{ title }}</h3>
@@ -29,11 +29,11 @@ defineProps({
     <Row v-else align="center" class="secondary-outer" gap="6">
       <Row align="center" gap="4">
         <IconBox><slot name="icon" /></IconBox>
-        <Stack gap="2">
-          <h4>
+        <Stack gap="1">
+          <h3>
             {{ title }} <Badge v-if="badge">{{ badge }}</Badge>
-          </h4>
-          <p class="text-sm">{{ description }}</p>
+          </h3>
+          <p>{{ description }}</p>
         </Stack>
       </Row>
       <FlexSpace />

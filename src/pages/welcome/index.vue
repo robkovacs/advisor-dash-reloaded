@@ -152,7 +152,6 @@ footer {
   align-items: center;
   gap: var(--space-4);
   padding: var(--space-12);
-  font-size: var(--font-size-sm);
   color: var(--color-text-muted);
 }
 

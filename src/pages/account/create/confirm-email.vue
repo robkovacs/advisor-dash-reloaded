@@ -21,7 +21,10 @@ channel.onmessage = (event) => {
 
 function openEmail() {
   window.open(
-    router.resolve({ path: '/account/confirm-email', query: { email: createAccountFormData.emailWork } }).href,
+    router.resolve({
+      path: '/account/confirm-email',
+      query: { email: createAccountFormData.emailWork },
+    }).href,
     '_blank',
   )
 }
@@ -30,7 +33,7 @@ onUnmounted(() => channel.close())
 </script>
 
 <template>
-  <Stack gap="8">
+  <Stack gap="6">
     <Stack gap="4">
       <Button variant="link" size="small" @click="back()"
         ><IconArrowLeft />Back</Button

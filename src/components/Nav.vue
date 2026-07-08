@@ -62,7 +62,7 @@ router.afterEach(() => {
 
 <style scoped>
 .sidebar {
-  padding: var(--space-3);
+  padding: var(--space-2);
   background-color: var(--color-bg-subtle);
   color: var(--color-text);
   display: flex;
@@ -89,7 +89,7 @@ router.afterEach(() => {
 
 @media (--breakpoint-sm) {
   .sidebar {
-    width: 16rem;
+    width: 14rem;
     z-index: auto;
   }
 
@@ -137,7 +137,7 @@ router.afterEach(() => {
   flex-direction: row;
   gap: var(--space-3);
   align-items: center;
-  padding: var(--space-3);
+  padding: var(--space-2);
   color: var(--color-text);
 }
 
@@ -147,7 +147,7 @@ router.afterEach(() => {
 }
 
 .nav-item.router-link-active {
-  background: var(--color-bg-muted);
+  background: color-mix(in srgb, var(--color-text) 6%, transparent);
   color: var(--color-accent);
   font-weight: var(--font-weight-bold);
 }
@@ -162,7 +162,7 @@ router.afterEach(() => {
   }
 
   .nav-item:not(.router-link-active):hover {
-    background: color-mix(in srgb, var(--color-text) 6%, transparent);
+    background: var(--color-bg-muted);
   }
 }
 </style>
