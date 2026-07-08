@@ -52,7 +52,7 @@ const onSubmit = handleSubmit((values) => {
       </Stack>
     </Stack>
     <form @submit="onSubmit">
-      <Stack gap="4">
+      <Stack gap="2">
         <InputEmail
           v-model="emailWork"
           label="Work email"

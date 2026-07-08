@@ -45,7 +45,7 @@ const onSubmit = handleSubmit((values) => next(values))
 
 <template>
   <form @submit.prevent="onSubmit">
-    <Stack gap="4">
+    <Stack gap="2">
       <InputNumber
         v-model="salariedEmployees"
         label="Number of salaried employees"

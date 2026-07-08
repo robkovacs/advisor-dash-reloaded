@@ -59,7 +59,7 @@ const onSubmit = handleSubmit((values) => next(values))
       </Row>
     </Notice>
     <form @submit.prevent="onSubmit">
-      <Stack gap="4">
+      <Stack gap="2">
         <InputText
           v-model="firstName"
           label="First name"

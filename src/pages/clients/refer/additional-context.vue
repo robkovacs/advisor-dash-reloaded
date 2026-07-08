@@ -11,8 +11,8 @@ const back = inject('back')
 </script>
 
 <template>
-  <Stack gap="4">
-    <form>
+  <form>
+    <Stack gap="2">
       <InputFile label="Additional documents" multiple optional>
         <template #helper>
           Share any files that might help us get this company started on
@@ -20,10 +20,10 @@ const back = inject('back')
         </template>
       </InputFile>
       <InputTextarea label="Anything else we should know?" optional />
-    </form>
-    <Row gap="4">
-      <Button variant="primary" @click="next()">Submit</Button>
-      <Button variant="secondary" @click="back()">Back</Button>
-    </Row>
-  </Stack>
+    </Stack>
+  </form>
+  <Row gap="4">
+    <Button variant="primary" @click="next()">Submit</Button>
+    <Button variant="secondary" @click="back()">Back</Button>
+  </Row>
 </template>

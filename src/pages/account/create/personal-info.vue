@@ -50,7 +50,7 @@ const onSubmit = handleSubmit((values) => {
       <h2>Tell us about yourself</h2>
     </Stack>
     <form @submit="onSubmit">
-      <Stack gap="4">
+      <Stack gap="2">
         <InputText
           v-model="firstName"
           label="First name"

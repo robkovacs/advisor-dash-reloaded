@@ -42,7 +42,7 @@ const onSubmit = handleSubmit((values) => {
       <h2>Create a new firm</h2>
     </Stack>
     <form @submit="onSubmit">
-      <Stack gap="4">
+      <Stack gap="2">
         <InputText
           v-model="firmName"
           label="Firm name"

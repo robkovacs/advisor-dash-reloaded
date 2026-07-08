@@ -72,7 +72,7 @@ const onSubmit = handleSubmit((values) => {
       <h2>Create your account</h2>
     </Stack>
     <form @submit="onSubmit">
-      <Stack gap="4">
+      <Stack gap="2">
         <InputText v-model="username" label="Username" :error="errors.username">
           <template #helper>
             Keep the same login, even if your work email changes
