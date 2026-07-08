@@ -145,7 +145,8 @@ const activeMembers = computed(() =>
 .stat-label {
   font-size: var(--font-size-lg);
   color: var(--color-text-muted);
-  margin-bottom: var(--space-1);
+  margin-bottom: var(--space-2);
+  line-height: var(--line-height-heading);
 }
 
 .stat-value {
