@@ -2,7 +2,7 @@
 import { computed, provide, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-definePage({ meta: { title: 'Refer a client' } })
+definePage({ meta: { title: 'Refer' } })
 import PageHeader from '@/components/PageHeader.vue'
 import Stack from '@/components/Stack.vue'
 import Columns from '@/components/Columns.vue'
@@ -102,7 +102,7 @@ provide('back', back)
     <RouterView :key="$route.path" />
   </template>
   <Stack v-else gap="6">
-    <PageHeader :ancestors="ancestors" title="Refer a client" />
+    <PageHeader :ancestors="ancestors" title="Refer" />
     <Columns layout="12rem minmax(0, 24rem) 1fr" gap="6">
       <Stepper :steps="steps" />
       <Transition :name="transition" mode="out-in">

@@ -1,13 +1,13 @@
 <script setup>
 import PageHeader from '@/components/PageHeader.vue'
 
-definePage({ meta: { title: 'Bulk referrals' } })
+definePage({ meta: { title: 'Bulk upload' } })
 
 const ancestors = [
   { label: 'Clients', to: '/clients' },
-  { label: 'Refer a client', to: '/clients/refer' },
+  { label: 'Refer', to: '/clients/refer' },
 ]
 </script>
 <template>
-  <PageHeader :ancestors="ancestors" title="Bulk referrals" />
+  <PageHeader :ancestors="ancestors" title="Bulk upload" />
 </template>
