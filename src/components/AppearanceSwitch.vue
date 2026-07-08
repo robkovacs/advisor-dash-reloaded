@@ -14,7 +14,7 @@ const { isDark, toggle } = useAppearance()
     :class="['switch', { 'switch--dark': isDark }]"
     @click="toggle"
   >
-    <span class="switch__knob">
+    <span class="knob">
       <IconSun v-if="!isDark" aria-hidden="true" />
       <IconMoon v-else aria-hidden="true" />
     </span>
@@ -45,7 +45,7 @@ const { isDark, toggle } = useAppearance()
   background: var(--color-gray-600);
 }
 
-.switch__knob {
+.knob {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -59,7 +59,7 @@ const { isDark, toggle } = useAppearance()
   flex-shrink: 0;
 }
 
-.switch--dark .switch__knob {
+.switch--dark .knob {
   transform: translateX(1.25rem);
   color: var(--color-gray-400);
 }

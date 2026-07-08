@@ -42,7 +42,7 @@ const visible = ref(false)
         />
         <button
           type="button"
-          class="toggle"
+          class="visibility-toggle"
           :aria-label="visible ? 'Hide password' : 'Show password'"
           @click="visible = !visible"
         >
@@ -67,7 +67,7 @@ input {
   align-items: center;
 }
 
-.toggle {
+.visibility-toggle {
   position: absolute;
   right: 0.1875rem;
   top: 0.1875rem;
@@ -85,7 +85,7 @@ input {
 }
 
 @media (hover: hover) {
-  .toggle:hover {
+  .visibility-toggle:hover {
     background-color: var(--color-bg-muted);
   }
 }

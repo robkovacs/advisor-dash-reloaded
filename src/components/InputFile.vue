@@ -89,13 +89,13 @@ function removeFile(index) {
         @dragleave="draggedOver = false"
         @drop.prevent="onDrop"
       >
-        <div class="dropzone__description">
+        <div class="dropzone-description">
           <span v-if="multiple || files.length === 0"
             >Drag and drop {{ multiple ? 'files' : 'a file' }} here, or</span
           >
-          <span v-else class="dropzone__filename">{{ files[0].name }}</span>
+          <span v-else class="dropzone-filename">{{ files[0].name }}</span>
         </div>
-        <button type="button" class="dropzone__button" @click="openPicker">
+        <button type="button" class="pick-button" @click="openPicker">
           {{
             !multiple && files.length > 0
               ? 'Choose a different file'
@@ -105,10 +105,10 @@ function removeFile(index) {
       </div>
       <ul v-if="multiple && files.length > 0" class="file-list">
         <li v-for="(file, i) in files" :key="i" class="file-list-item">
-          <span class="file-list-item__name">{{ file.name }}</span>
+          <span class="file-name">{{ file.name }}</span>
           <button
             type="button"
-            class="file-list-item__remove"
+            class="remove-button"
             :aria-label="`Remove ${file.name}`"
             @click="removeFile(i)"
           >
@@ -151,27 +151,27 @@ function removeFile(index) {
   border-color: var(--color-error-border);
 }
 
-.dropzone--filled .dropzone__button {
+.dropzone--filled .pick-button {
   order: 2;
 }
 
-.dropzone__description {
+.dropzone-description {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--space-1);
 }
 
-.dropzone__icon {
+.upload-icon {
   font-size: 1.5rem;
 }
 
-.dropzone__filename {
+.dropzone-filename {
   color: var(--color-text);
   overflow-wrap: anywhere;
 }
 
-.dropzone__button {
+.pick-button {
   appearance: none;
   border: 1px solid var(--color-input-border);
   border-radius: var(--border-radius-md);
@@ -183,13 +183,13 @@ function removeFile(index) {
   cursor: pointer;
 }
 
-.dropzone__button:focus-visible {
+.pick-button:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 
 @media (hover: hover) {
-  .dropzone__button:hover {
+  .pick-button:hover {
     background: color-mix(in srgb, var(--color-text) 6%, transparent);
   }
 }
@@ -214,12 +214,12 @@ function removeFile(index) {
   padding: var(--space-2) var(--space-3);
 }
 
-.file-list-item__name {
+.file-name {
   overflow-wrap: anywhere;
   color: var(--color-text);
 }
 
-.file-list-item__remove {
+.remove-button {
   appearance: none;
   border: none;
   background: none;
@@ -233,13 +233,13 @@ function removeFile(index) {
   font-size: 1rem;
 }
 
-.file-list-item__remove:focus-visible {
+.remove-button:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 
 @media (hover: hover) {
-  .file-list-item__remove:hover {
+  .remove-button:hover {
     color: var(--color-text);
     background: var(--color-bg-muted);
   }

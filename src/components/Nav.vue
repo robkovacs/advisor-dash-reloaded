@@ -46,13 +46,13 @@ router.afterEach(() => {
       </div>
       <nav class="nav">
         <RouterLink class="nav-item" to="/dashboard">
-          <IconHome class="icon" /> Home</RouterLink
+          <IconHome class="nav-icon" /> Home</RouterLink
         >
         <RouterLink class="nav-item" to="/clients">
-          <IconClients class="icon" /> Clients</RouterLink
+          <IconClients class="nav-icon" /> Clients</RouterLink
         >
         <RouterLink class="nav-item" to="/firm-members">
-          <IconFirmMembers class="icon" /> Firm members</RouterLink
+          <IconFirmMembers class="nav-icon" /> Firm members</RouterLink
         >
       </nav>
     </Stack>
@@ -141,7 +141,7 @@ router.afterEach(() => {
   color: var(--color-text);
 }
 
-.nav-item .icon {
+.nav-item .nav-icon {
   color: var(--color-text-muted);
   font-size: var(--font-size-lg);
 }
@@ -152,7 +152,7 @@ router.afterEach(() => {
   font-weight: var(--font-weight-bold);
 }
 
-.nav-item.router-link-active .icon {
+.nav-item.router-link-active .nav-icon {
   color: var(--color-accent);
 }
 

@@ -29,15 +29,15 @@ const isLast = computed(() =>
 
 <template>
   <li class="step" :class="[`step--${status}`, { 'step--last': isLast }]">
-    <div class="step__track">
-      <div v-if="!isFirst" class="step__stub" />
-      <div class="step__dot">
-        <CheckIcon v-if="status === 'complete'" class="step__check" />
+    <div class="step-track">
+      <div v-if="!isFirst" class="step-stub" />
+      <div class="step-dot">
+        <CheckIcon v-if="status === 'complete'" class="step-check" />
       </div>
-      <div v-if="!isLast" class="step__line" />
+      <div v-if="!isLast" class="step-line" />
     </div>
-    <RouterLink v-if="to" :to="to" class="step__label">{{ label }}</RouterLink>
-    <span v-else class="step__label">{{ label }}</span>
+    <RouterLink v-if="to" :to="to" class="step-label">{{ label }}</RouterLink>
+    <span v-else class="step-label">{{ label }}</span>
   </li>
 </template>
 
@@ -48,7 +48,7 @@ const isLast = computed(() =>
   gap: 0 var(--space-3);
 }
 
-.step__track {
+.step-track {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -59,7 +59,7 @@ const isLast = computed(() =>
   padding-top: 0.375rem;
 }
 
-.step__stub {
+.step-stub {
   /* absolute so it doesn't affect layout; sits in the padding-top area */
   position: absolute;
   top: 0;
@@ -68,7 +68,7 @@ const isLast = computed(() =>
   background-color: var(--color-line);
 }
 
-.step__dot {
+.step-dot {
   width: 1rem;
   height: 1rem;
   border-radius: 50%;
@@ -78,19 +78,19 @@ const isLast = computed(() =>
   justify-content: center;
 }
 
-.step__check {
+.step-check {
   width: 0.625rem;
   height: 0.625rem;
   color: var(--color-text-on-accent);
 }
 
-.step__line {
+.step-line {
   width: 1px;
   flex: 1;
   background-color: var(--color-line);
 }
 
-.step__label {
+.step-label {
   align-self: start;
   margin-top: 0.125rem;
   margin-bottom: var(--space-4);
@@ -99,49 +99,49 @@ const isLast = computed(() =>
   color: var(--color-text-muted);
 }
 
-.step--last .step__label {
+.step--last .step-label {
   padding-bottom: 0;
 }
 
 /* complete */
-.step--complete .step__dot {
+.step--complete .step-dot {
   background-color: var(--color-success);
 }
 
-.step--complete .step__label {
+.step--complete .step-label {
   color: var(--color-text);
 }
 
-a.step__label {
+a.step-label {
   text-decoration: none;
   border-radius: var(--border-radius-sm);
   width: fit-content;
 }
 
-a.step__label:focus-visible {
+a.step-label:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 
 @media (hover: hover) {
-  a.step__label:hover {
+  a.step-label:hover {
     text-decoration: underline;
   }
 }
 
 /* current */
-.step--current .step__dot {
+.step--current .step-dot {
   background-color: transparent;
   border: 1px solid var(--color-accent);
 }
 
-.step--current .step__label {
+.step--current .step-label {
   color: var(--color-accent-text);
   font-weight: 700;
 }
 
 /* pending */
-.step--pending .step__dot {
+.step--pending .step-dot {
   background-color: var(--color-bg-muted);
 }
 </style>

@@ -8,7 +8,7 @@ defineProps({
 </script>
 
 <template>
-  <span class="badge" :data-variant="variant">
+  <span class="badge" :class="`badge--${variant}`">
     <slot />
   </span>
 </template>
@@ -25,17 +25,17 @@ defineProps({
   white-space: nowrap;
 }
 
-.badge[data-variant='default'] {
+.badge--default {
   background-color: var(--color-bg-muted);
   color: var(--color-text-muted);
 }
 
-.badge[data-variant='success'] {
+.badge--success {
   background-color: var(--color-success-subtle);
   color: var(--color-success-text);
 }
 
-.badge[data-variant='error'] {
+.badge--error {
   background-color: var(--color-error-subtle);
   color: var(--color-error);
 }

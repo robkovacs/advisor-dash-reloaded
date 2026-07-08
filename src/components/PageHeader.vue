@@ -18,7 +18,7 @@ defineProps({
       <span v-else class="ancestor">{{ ancestor.label }}</span>
       <span class="separator" aria-hidden="true">/</span>
     </template>
-    <span class="title">{{ title }}</span>
+    <span class="current-page">{{ title }}</span>
   </h1>
 </template>
 

@@ -15,7 +15,7 @@ const props = defineProps({
     aria-valuemin="0"
     aria-valuemax="100"
   >
-    <div class="progress-bar__indicator" :style="{ width: `${props.value}%` }"></div>
+    <div class="indicator" :style="{ width: `${props.value}%` }"></div>
   </div>
 </template>
 
@@ -26,7 +26,7 @@ const props = defineProps({
   background-color: var(--color-bg-muted);
 }
 
-.progress-bar__indicator {
+.indicator {
   background-color: var(--color-accent);
   height: 100%;
   transition: width 0.4s ease;

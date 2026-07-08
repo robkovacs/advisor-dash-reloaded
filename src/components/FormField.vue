@@ -23,7 +23,7 @@ const errorId = useId()
       <Label :for="inputId">{{ label }}</Label>
       <Badge v-if="optional">Optional</Badge>
     </div>
-    <span v-if="slots.helper" :id="helperId" class="helper">
+    <span v-if="slots.helper" :id="helperId" class="field-helper">
       <slot name="helper" />
     </span>
     <slot
@@ -50,7 +50,7 @@ const errorId = useId()
   gap: var(--space-2);
 }
 
-.helper {
+.field-helper {
   margin-top: calc(-1 * var(--space-1));
   color: var(--color-text-muted);
 }

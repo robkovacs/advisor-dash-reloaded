@@ -11,7 +11,7 @@ defineProps({
   <div class="error-wrap" :class="{ active: message }">
     <span :id="id" role="alert" class="input-error">
       <template v-if="message">
-        <IconWarningCircle class="icon" />{{ message }}
+        <IconWarningCircle class="error-icon" />{{ message }}
       </template>
     </span>
   </div>
@@ -38,7 +38,7 @@ defineProps({
   gap: var(--space-2);
 }
 
-.icon {
+.error-icon {
   flex: 0 0 1em;
   margin-top: calc(
     ((var(--font-size-md) * var(--line-height-body)) - var(--font-size-md)) / 2
