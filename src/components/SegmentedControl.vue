@@ -1,4 +1,6 @@
 <script setup>
+import Badge from './Badge.vue'
+
 const props = defineProps({
   options: {
     type: Array, // [{ label, value }]
@@ -25,6 +27,12 @@ const emit = defineEmits(['update:modelValue'])
       @click="emit('update:modelValue', option.value)"
     >
       {{ option.label }}
+      <Badge
+        class="segment-badge"
+        v-if="option.badge != null"
+        :variant="modelValue === option.value ? 'accent' : 'default'"
+        >{{ option.badge }}</Badge
+      >
     </button>
   </div>
 </template>
@@ -39,6 +47,9 @@ const emit = defineEmits(['update:modelValue'])
 }
 
 .segment {
+  display: flex;
+  gap: var(--space-2);
+  align-items: baseline;
   padding: var(--space-1) var(--space-3);
   border: none;
   border-radius: calc(var(--border-radius-md) - 2px);
@@ -67,5 +78,10 @@ const emit = defineEmits(['update:modelValue'])
   box-shadow:
     0 1px 2px rgb(0 0 0 / 0.06),
     0 0 0 1px rgb(0 0 0 / 0.04);
+}
+
+.segment-badge {
+  min-width: 1lh;
+  text-align: center;
 }
 </style>

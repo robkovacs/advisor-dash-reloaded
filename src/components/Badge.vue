@@ -23,6 +23,7 @@ defineProps({
   padding: var(--space-1) var(--space-2);
   border-radius: var(--border-radius-max);
   white-space: nowrap;
+  width: fit-content;
 }
 
 .badge--default {
@@ -38,5 +39,10 @@ defineProps({
 .badge--error {
   background-color: var(--color-error-subtle);
   color: var(--color-error);
+}
+
+.badge--accent {
+  background-color: var(--color-accent-subtle);
+  color: var(--color-accent-text);
 }
 </style>

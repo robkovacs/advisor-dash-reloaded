@@ -16,6 +16,10 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  destructive: {
+    type: Boolean,
+    default: false,
+  },
   size: {
     type: String,
     default: null,
@@ -32,6 +36,7 @@ defineProps({
       `btn--${variant}`,
       size ? `btn--${size}` : '',
       iconOnly ? `btn--icon-only` : '',
+      destructive ? 'btn--destructive' : '',
     ]"
   >
     <slot />
@@ -112,6 +117,10 @@ defineProps({
   font-weight: var(--font-weight-regular);
 }
 
+.btn--destructive {
+  color: var(--color-error);
+}
+
 @media (hover: hover) {
   .btn--primary:hover {
     background: var(--color-accent-hover);
@@ -123,6 +132,10 @@ defineProps({
 
   .btn--tertiary:hover {
     background: color-mix(in srgb, var(--color-text) 6%, transparent);
+  }
+
+  .btn--destructive:hover {
+    background: color-mix(in srgb, var(--color-error) 10%, transparent);
   }
 
   .btn:disabled:hover,

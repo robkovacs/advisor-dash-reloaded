@@ -13,6 +13,7 @@ const props = defineProps({
   error: String,
   optional: Boolean,
   hideError: Boolean,
+  hideLabel: Boolean,
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -64,6 +65,7 @@ function removeFile(index) {
     :error="error"
     :optional="optional"
     :hide-error="hideError"
+    :hide-label="hideLabel"
   >
     <template v-if="$slots.helper" #helper>
       <slot name="helper" />

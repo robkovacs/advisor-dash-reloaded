@@ -34,7 +34,7 @@ defineProps({
   margin-top: var(--space-0-5);
   font-size: var(--font-size-lg);
   color: var(--color-accent-text);
-  margin-right: var(--space-3);
+  margin-right: var(--space-2);
 }
 
 .notice--center-icon .notice-icon {

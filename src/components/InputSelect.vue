@@ -2,6 +2,7 @@
 import { useId } from 'vue'
 import FormField from './FormField.vue'
 import IconCaretDown from '~icons/ph/caret-down'
+import IconX from '~icons/ph/x'
 
 const props = defineProps({
   modelValue: String,
@@ -10,8 +11,10 @@ const props = defineProps({
   id: String,
   optional: Boolean,
   hideError: Boolean,
+  hideLabel: Boolean,
   placeholder: String,
   width: String,
+  clearable: Boolean,
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -27,6 +30,7 @@ const inputId = props.id ?? generatedId
     :error="error"
     :optional="optional"
     :hide-error="hideError"
+    :hide-label="hideLabel"
   >
     <template v-if="$slots.helper" #helper>
       <slot name="helper" />
@@ -43,7 +47,16 @@ const inputId = props.id ?? generatedId
           <option v-if="placeholder" value="" disabled>{{ placeholder }}</option>
           <slot />
         </select>
-        <IconCaretDown class="select-caret" aria-hidden="true" />
+        <button
+          v-if="clearable && modelValue"
+          type="button"
+          class="select-clear"
+          aria-label="Clear selection"
+          @click="emit('update:modelValue', '')"
+        >
+          <IconX aria-hidden="true" />
+        </button>
+        <IconCaretDown v-else class="select-caret" aria-hidden="true" />
       </div>
     </template>
   </FormField>
@@ -73,5 +86,27 @@ select:has(option:checked[value='']) {
   transform: translateY(-50%);
   pointer-events: none;
   color: var(--color-text);
+}
+
+.select-clear {
+  position: absolute;
+  right: var(--space-2);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: none;
+  background: transparent;
+  border-radius: var(--border-radius-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.select-clear:hover {
+  color: var(--color-text);
+  background: var(--color-bg-muted);
 }
 </style>

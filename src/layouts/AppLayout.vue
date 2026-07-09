@@ -1,11 +1,16 @@
 <script setup>
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import Nav from '@/components/Nav.vue'
+
+const route = useRoute()
+const fixedHeight = computed(() => route.meta.fixedHeight)
 </script>
 
 <template>
   <div class="layout">
     <Nav />
-    <main>
+    <main :class="{ 'fixed-height': fixedHeight }">
       <div v-auto-animate>
         <RouterView :key="$route.path.split('/')[1]" />
       </div>
@@ -18,7 +23,7 @@ import Nav from '@/components/Nav.vue'
   display: flex;
   flex-direction: column;
   gap: 0;
-  min-height: 100svh;
+  height: 100svh;
 }
 
 @media (--breakpoint-sm) {
@@ -29,11 +34,23 @@ import Nav from '@/components/Nav.vue'
 
 main {
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
   padding: var(--space-6);
   align-items: stretch;
   container-type: inline-size;
+}
+
+main.fixed-height {
+  overflow: hidden;
+}
+
+main.fixed-height > * {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 </style>

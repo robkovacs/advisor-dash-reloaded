@@ -8,6 +8,7 @@ import Button from '@/components/Button.vue'
 import InputNumber from '@/components/InputNumber.vue'
 import InputRadio from '@/components/InputRadio.vue'
 import { referFormData } from '@/use/useReferClientForm'
+import { SOLUTION_OPTIONS, BENEFITS_OPTIONS } from '@/data/referralOptions'
 
 const next = inject('next')
 const back = inject('back')
@@ -66,23 +67,14 @@ const onSubmit = handleSubmit((values) => next(values))
         v-model="solution"
         label="Preferred Justworks solution"
         width="50%"
-        :options="[
-          { value: 'payroll', label: 'Payroll' },
-          { value: 'peo', label: 'PEO' },
-          { value: 'eor', label: 'EOR' },
-          { value: 'not-sure', label: 'Not sure' },
-        ]"
+        :options="SOLUTION_OPTIONS"
         :error="errors.solution"
       />
       <InputRadio
         v-model="justworksBenefits"
         label="Are they interested in offering benefits through Justworks?"
         width="50%"
-        :options="[
-          { value: 'yes', label: 'Yes' },
-          { value: 'no', label: 'No' },
-          { value: 'not-sure', label: 'Not sure' },
-        ]"
+        :options="BENEFITS_OPTIONS"
         :error="errors.justworksBenefits"
       />
       <Row gap="4">

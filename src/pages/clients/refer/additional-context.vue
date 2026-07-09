@@ -21,9 +21,9 @@ const back = inject('back')
       </InputFile>
       <InputTextarea label="Anything else we should know?" optional />
     </Stack>
+    <Row gap="4">
+      <Button variant="primary" @click="next()">Submit</Button>
+      <Button variant="secondary" @click="back()">Back</Button>
+    </Row>
   </form>
-  <Row gap="4">
-    <Button variant="primary" @click="next()">Submit</Button>
-    <Button variant="secondary" @click="back()">Back</Button>
-  </Row>
 </template>

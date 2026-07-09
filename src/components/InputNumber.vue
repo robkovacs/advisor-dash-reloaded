@@ -19,6 +19,7 @@ const props = defineProps({
   id: String,
   optional: Boolean,
   hideError: Boolean,
+  hideLabel: Boolean,
   width: String,
 })
 
@@ -29,7 +30,7 @@ const inputId = props.id ?? generatedId
 </script>
 
 <template>
-  <FormField :label="label" :input-id="inputId" :error="error" :optional="optional" :hide-error="hideError">
+  <FormField :label="label" :input-id="inputId" :error="error" :optional="optional" :hide-error="hideError" :hide-label="hideLabel">
     <template v-if="$slots.helper" #helper>
       <slot name="helper" />
     </template>

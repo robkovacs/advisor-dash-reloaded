@@ -22,11 +22,12 @@ const STEPS = [
 ]
 
 const STEP_LABELS = [
+  'Company info',
   'Primary contact',
-  'Company contact info',
   'Company details',
   'Additional context',
 ]
+
 
 const ancestors = [{ label: 'Clients', to: '/clients' }]
 

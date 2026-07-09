@@ -9,6 +9,7 @@ const props = defineProps({
   error: String,
   optional: Boolean,
   hideError: Boolean,
+  hideLabel: Boolean,
   width: String,
 })
 
@@ -23,6 +24,7 @@ const groupName = useId()
     :error="error"
     :optional="optional"
     :hide-error="hideError"
+    :hide-label="hideLabel"
   >
     <template #default="{ 'aria-describedby': describedby }">
       <div

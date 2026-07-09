@@ -150,6 +150,9 @@ declare module 'vue-router/auto-routes' {
       | '/clients/refer/'
       | '/clients/refer/additional-context'
       | '/clients/refer/bulk/'
+      | '/clients/refer/bulk/BulkMapping'
+      | '/clients/refer/bulk/BulkReview'
+      | '/clients/refer/bulk/BulkUpload'
       | '/clients/refer/company-contact'
       | '/clients/refer/company-details'
     >,
@@ -170,6 +173,27 @@ declare module 'vue-router/auto-routes' {
     '/clients/refer/bulk/': RouteRecordInfo<
       '/clients/refer/bulk/',
       '/clients/refer/bulk',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/clients/refer/bulk/BulkMapping': RouteRecordInfo<
+      '/clients/refer/bulk/BulkMapping',
+      '/clients/refer/bulk/BulkMapping',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/clients/refer/bulk/BulkReview': RouteRecordInfo<
+      '/clients/refer/bulk/BulkReview',
+      '/clients/refer/bulk/BulkReview',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/clients/refer/bulk/BulkUpload': RouteRecordInfo<
+      '/clients/refer/bulk/BulkUpload',
+      '/clients/refer/bulk/BulkUpload',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -367,6 +391,9 @@ declare module 'vue-router/auto-routes' {
         | '/clients/refer/'
         | '/clients/refer/additional-context'
         | '/clients/refer/bulk/'
+        | '/clients/refer/bulk/BulkMapping'
+        | '/clients/refer/bulk/BulkReview'
+        | '/clients/refer/bulk/BulkUpload'
         | '/clients/refer/company-contact'
         | '/clients/refer/company-details'
       views:
@@ -387,6 +414,24 @@ declare module 'vue-router/auto-routes' {
     'src/pages/clients/refer/bulk/index.vue': {
       routes:
         | '/clients/refer/bulk/'
+      views:
+        | never
+    }
+    'src/pages/clients/refer/bulk/BulkMapping.vue': {
+      routes:
+        | '/clients/refer/bulk/BulkMapping'
+      views:
+        | never
+    }
+    'src/pages/clients/refer/bulk/BulkReview.vue': {
+      routes:
+        | '/clients/refer/bulk/BulkReview'
+      views:
+        | never
+    }
+    'src/pages/clients/refer/bulk/BulkUpload.vue': {
+      routes:
+        | '/clients/refer/bulk/BulkUpload'
       views:
         | never
     }

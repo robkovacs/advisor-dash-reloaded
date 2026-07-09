@@ -44,7 +44,7 @@ const onSubmit = handleSubmit((values) => {
       <Button to="/welcome" variant="link" size="small"
         ><IconArrowLeft />Back</Button
       >
-      <Stack gap="3">
+      <Stack gap="2">
         <h2>Enter your work email</h2>
         <p class="text-muted">
           We'll use it to check if your firm is already here.

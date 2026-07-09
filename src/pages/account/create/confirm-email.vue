@@ -40,13 +40,11 @@ onUnmounted(() => channel.close())
       >
       <h2>Confirm your work email</h2>
     </Stack>
-    <Stack gap="3">
-      <p>
-        We sent a confirmation link via email to
-        <strong>{{ createAccountFormData.emailWork }}</strong
-        >.
-      </p>
-    </Stack>
+    <p>
+      We sent a confirmation link via email to
+      <strong>{{ createAccountFormData.emailWork }}</strong
+      >.
+    </p>
     <Stack gap="4">
       <Button variant="primary" disabled>Check your email to continue</Button>
       <Row gap="6" justify="center">

@@ -1,6 +1,7 @@
 <script setup>
 import Stack from '@/components/Stack.vue'
 import Row from '@/components/Row.vue'
+import Box from '@/components/Box.vue'
 import IconBox from '@/components/IconBox.vue'
 import FlexSpace from '@/components/FlexSpace.vue'
 import Badge from '@/components/Badge.vue'
@@ -14,7 +15,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="firm-setup-card">
+  <Box padding="6" class="firm-setup-card">
     <Stack v-if="variant === 'primary'" gap="6" class="primary-layout">
       <Stack gap="3" class="primary-content">
         <Row align="center" gap="4">
@@ -39,15 +40,12 @@ defineProps({
       <FlexSpace />
       <slot name="actions" />
     </Row>
-  </div>
+  </Box>
 </template>
 
 <style scoped>
 .firm-setup-card {
-  padding: var(--space-6);
   background: var(--color-bg);
-  border: 1px solid var(--color-line);
-  border-radius: var(--border-radius-md);
   width: 100%;
   container-type: inline-size;
 }

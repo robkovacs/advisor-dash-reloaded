@@ -1,17 +1,14 @@
 <script setup>
-import { ref, useId } from 'vue'
+import { useId } from 'vue'
 import FormField from './FormField.vue'
-import IconEye from '~icons/ph/eye'
-import IconEyeClosed from '~icons/ph/eye-closed'
+import IconSearch from '~icons/ph/magnifying-glass'
+import IconX from '~icons/ph/x'
 
 const props = defineProps({
   modelValue: String,
   label: String,
   placeholder: String,
-  autocomplete: String,
-  error: String,
   id: String,
-  hideError: Boolean,
   hideLabel: Boolean,
   width: String,
 })
@@ -20,35 +17,34 @@ const emit = defineEmits(['update:modelValue'])
 
 const generatedId = useId()
 const inputId = props.id ?? generatedId
-
-const visible = ref(false)
 </script>
 
 <template>
-  <FormField :label="label" :input-id="inputId" :error="error" :hide-error="hideError" :hide-label="hideLabel">
-    <template v-if="$slots.helper" #helper>
-      <slot name="helper" />
-    </template>
-    <template #default="{ invalid, ...inputAttrs }">
-      <div class="input-wrapper" :style="width ? { width } : undefined">
+  <FormField
+    :label="label"
+    :input-id="inputId"
+    :hide-label="hideLabel"
+    hide-error
+  >
+    <template #default="inputAttrs">
+      <div class="search-wrapper" :style="width ? { width } : undefined">
+        <IconSearch class="search-icon" aria-hidden="true" />
         <input
           :id="inputId"
           v-bind="inputAttrs"
-          :class="{ invalid }"
-          :type="visible ? 'text' : 'password'"
+          type="search"
           :value="modelValue"
           :placeholder="placeholder"
-          :autocomplete="autocomplete"
           @input="emit('update:modelValue', $event.target.value)"
         />
         <button
+          v-if="modelValue"
+          class="search-clear"
           type="button"
-          class="visibility-toggle"
-          :aria-label="visible ? 'Hide password' : 'Show password'"
-          @click="visible = !visible"
+          aria-label="Clear search"
+          @click="emit('update:modelValue', '')"
         >
-          <IconEye v-if="!visible" />
-          <IconEyeClosed v-else />
+          <IconX aria-hidden="true" />
         </button>
       </div>
     </template>
@@ -58,17 +54,25 @@ const visible = ref(false)
 <style scoped>
 @import '../styles/components/input.css';
 
-input {
-  padding-right: calc(var(--space-3) * 2 + 1em);
-}
-
-.input-wrapper {
+.search-wrapper {
   position: relative;
-  display: flex;
-  align-items: center;
 }
 
-.visibility-toggle {
+.search-icon {
+  position: absolute;
+  left: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--color-text-muted);
+}
+
+input {
+  padding-left: calc(var(--space-3) + 1em + var(--space-2));
+  padding-right: calc(var(--space-3) + 1em + var(--space-2));
+}
+
+.search-clear {
   position: absolute;
   right: 0.1875rem;
   top: 0.1875rem;
@@ -86,7 +90,7 @@ input {
 }
 
 @media (hover: hover) {
-  .visibility-toggle:hover {
+  .search-clear:hover {
     background-color: var(--color-bg-muted);
   }
 }
