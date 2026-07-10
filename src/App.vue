@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import AppLayout from '@/layouts/AppLayout.vue'
+import ToastStack from '@/components/ToastStack.vue'
 
 const route = useRoute()
 const PUBLIC_PREFIXES = ['/welcome', '/account']
@@ -16,6 +17,7 @@ const isPublic = computed(() =>
     <AppLayout v-if="!isPublic" key="app" />
     <RouterView v-else key="public" />
   </div>
+  <ToastStack />
 </template>
 
 <style>

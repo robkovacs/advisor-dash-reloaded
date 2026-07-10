@@ -10,6 +10,7 @@ import IconClose from '~icons/ph/x'
 import IconHome from '~icons/ph/house-line'
 import Button from '@/components/Button.vue'
 import IconClients from '~icons/ph/building-office'
+import IconPayrolls from '~icons/ph/invoice'
 import IconFirmMembers from '~icons/ph/users-three'
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 import AppearanceSwitch from '@/components/AppearanceSwitch.vue'
@@ -50,6 +51,10 @@ router.afterEach(() => {
         >
         <RouterLink class="nav-item" to="/clients">
           <IconClients class="nav-icon" /> Clients</RouterLink
+        >
+
+        <RouterLink class="nav-item" to="/payrolls">
+          <IconPayrolls class="nav-icon" /> Payrolls</RouterLink
         >
         <RouterLink class="nav-item" to="/firm-members">
           <IconFirmMembers class="nav-icon" /> Firm members</RouterLink

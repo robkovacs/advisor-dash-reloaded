@@ -1,15 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { routes } from 'vue-router/auto-routes'
-import { clearReferForm } from '@/use/useReferClientForm'
 import { clients } from '@/use/useClients'
 import { firmMembers } from '@/use/useFirmMembers'
-
-const REFER_PATHS = [
-  '/clients/refer',
-  '/clients/refer/company-contact',
-  '/clients/refer/company-details',
-  '/clients/refer/additional-context',
-]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,10 +15,6 @@ router.beforeEach((to, from) => {
     (p) => to.path === p || to.path.startsWith(p + '/'),
   )
   if (!authed && !isPublic) return '/welcome'
-
-  if (to.path === '/clients/refer' && !REFER_PATHS.includes(from.path)) {
-    clearReferForm()
-  }
 
   // Suppress AppLayout for [id] routes when the resource doesn't exist
   if (to.params.id) {
@@ -43,7 +31,9 @@ router.beforeEach((to, from) => {
 router.afterEach((to) => {
   const title = to.matched.findLast((r) => r.meta.title)?.meta.title
   document.title = title ? `${title} — Advisor Dashboard` : 'Advisor Dashboard'
-  window.scrollTo({ top: 0, behavior: 'smooth' })
+  const main = document.getElementById('app-main')
+  if (main) main.scrollTo({ top: 0, behavior: 'instant' })
+  else window.scrollTo({ top: 0, behavior: 'instant' })
 })
 
 export default router

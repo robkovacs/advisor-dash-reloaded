@@ -10,7 +10,7 @@ const fixedHeight = computed(() => route.meta.fixedHeight)
 <template>
   <div class="layout">
     <Nav />
-    <main :class="{ 'fixed-height': fixedHeight }">
+    <main id="app-main" :class="{ 'fixed-height': fixedHeight }">
       <div v-auto-animate>
         <RouterView :key="$route.path.split('/')[1]" />
       </div>

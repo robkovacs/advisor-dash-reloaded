@@ -69,28 +69,15 @@ function addManual() {
         </Stack>
       </Box>
       <Stack gap="6" align="center" class="upload-content">
-        <div class="info-columns">
-          <div class="info-column">
-            <h4 class="info-subheading">Start with at least:</h4>
-            <ul class="info-list">
-              <li>Company name</li>
-              <li>Primary contact name</li>
-              <li>Primary contact email</li>
-            </ul>
-          </div>
-          <div class="info-column">
-            <h4 class="info-subheading">It's helpful to include:</h4>
-            <ul class="info-list">
-              <li>Company phone, website, address</li>
-              <li>Number of salaried &amp; hourly employees</li>
-              <li>Current payroll provider</li>
-              <li>Preferred Justworks solution</li>
-              <li>Whether they want to offer benefits via Justworks</li>
-              <li>Current benefits provider (if any)</li>
-              <li>Next benefits renewal date</li>
-            </ul>
-          </div>
-        </div>
+        <Stack gap="2" class="info-details">
+          <h4 class="info-subheading">Include for each referral:</h4>
+          <ul class="info-list">
+            <li>Company name</li>
+            <li>Contact first and last name</li>
+            <li>Contact email or phone number</li>
+          </ul>
+          <p class="info-note">You can add more details after submitting.</p>
+        </Stack>
         <Notice>
           Don't worry about column names; we'll do our best to match what you
           have to what we need, and let you adjust if needed.
@@ -138,10 +125,14 @@ function addManual() {
   gap: var(--space-5);
 }
 
-.info-columns {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-6);
+.info-details {
+  max-width: 24rem;
+  width: 100%;
+}
+
+.info-note {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
 }
 
 .info-subheading {
