@@ -19,8 +19,9 @@ const router = useRouter()
 
 const statusLabel = {
   active: 'Active',
-  pending: 'Pending',
-  declined: 'Declined',
+  pending: 'Referral',
+  pending2: 'Onboarding',
+  declined: 'Archived',
 }
 const statusVariant = {
   active: 'success',
@@ -29,13 +30,13 @@ const statusVariant = {
 }
 
 const filters = [
-  { label: 'All', value: null },
   { label: 'Active', value: 'active' },
-  { label: 'Pending', value: 'pending' },
-  { label: 'Declined', value: 'declined' },
+  { label: 'Referral', value: 'pending' },
+  { label: 'Onboarding', value: 'pending2' },
+  { label: 'Archived', value: 'declined' },
 ]
 
-const activeFilter = computed(() => route.query.status ?? null)
+const activeFilter = computed(() => route.query.status ?? 'active')
 
 function setFilter(value) {
   router.replace({ query: value ? { status: value } : {} })

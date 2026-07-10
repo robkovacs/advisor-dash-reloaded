@@ -142,30 +142,45 @@ declare module 'vue-router/auto-routes' {
       { id: ParamValue<false> },
       | never
     >,
+    '/clients/internals/CompletenessCard': RouteRecordInfo<
+      '/clients/internals/CompletenessCard',
+      '/clients/internals/CompletenessCard',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/clients/internals/ProfileField': RouteRecordInfo<
+      '/clients/internals/ProfileField',
+      '/clients/internals/ProfileField',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/clients/internals/ProfileSection': RouteRecordInfo<
+      '/clients/internals/ProfileSection',
+      '/clients/internals/ProfileSection',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/clients/refer': RouteRecordInfo<
       '/clients/refer',
       '/clients/refer',
       Record<never, never>,
       Record<never, never>,
       | '/clients/refer/'
-      | '/clients/refer/additional-context'
       | '/clients/refer/bulk/'
       | '/clients/refer/bulk/BulkMapping'
       | '/clients/refer/bulk/BulkReview'
       | '/clients/refer/bulk/BulkUpload'
-      | '/clients/refer/company-contact'
-      | '/clients/refer/company-details'
+      | '/clients/refer/bulk/internals/EditableCell'
+      | '/clients/refer/bulk/internals/EditableTable'
+      | '/clients/refer/bulk/success'
+      | '/clients/refer/success'
     >,
     '/clients/refer/': RouteRecordInfo<
       '/clients/refer/',
       '/clients/refer',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/clients/refer/additional-context': RouteRecordInfo<
-      '/clients/refer/additional-context',
-      '/clients/refer/additional-context',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -198,16 +213,30 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/clients/refer/company-contact': RouteRecordInfo<
-      '/clients/refer/company-contact',
-      '/clients/refer/company-contact',
+    '/clients/refer/bulk/internals/EditableCell': RouteRecordInfo<
+      '/clients/refer/bulk/internals/EditableCell',
+      '/clients/refer/bulk/internals/EditableCell',
       Record<never, never>,
       Record<never, never>,
       | never
     >,
-    '/clients/refer/company-details': RouteRecordInfo<
-      '/clients/refer/company-details',
-      '/clients/refer/company-details',
+    '/clients/refer/bulk/internals/EditableTable': RouteRecordInfo<
+      '/clients/refer/bulk/internals/EditableTable',
+      '/clients/refer/bulk/internals/EditableTable',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/clients/refer/bulk/success': RouteRecordInfo<
+      '/clients/refer/bulk/success',
+      '/clients/refer/bulk/success',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/clients/refer/success': RouteRecordInfo<
+      '/clients/refer/success',
+      '/clients/refer/success',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -385,29 +414,42 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
+    'src/pages/clients/internals/CompletenessCard.vue': {
+      routes:
+        | '/clients/internals/CompletenessCard'
+      views:
+        | never
+    }
+    'src/pages/clients/internals/ProfileField.vue': {
+      routes:
+        | '/clients/internals/ProfileField'
+      views:
+        | never
+    }
+    'src/pages/clients/internals/ProfileSection.vue': {
+      routes:
+        | '/clients/internals/ProfileSection'
+      views:
+        | never
+    }
     'src/pages/clients/refer.vue': {
       routes:
         | '/clients/refer'
         | '/clients/refer/'
-        | '/clients/refer/additional-context'
         | '/clients/refer/bulk/'
         | '/clients/refer/bulk/BulkMapping'
         | '/clients/refer/bulk/BulkReview'
         | '/clients/refer/bulk/BulkUpload'
-        | '/clients/refer/company-contact'
-        | '/clients/refer/company-details'
+        | '/clients/refer/bulk/internals/EditableCell'
+        | '/clients/refer/bulk/internals/EditableTable'
+        | '/clients/refer/bulk/success'
+        | '/clients/refer/success'
       views:
         | 'default'
     }
     'src/pages/clients/refer/index.vue': {
       routes:
         | '/clients/refer/'
-      views:
-        | never
-    }
-    'src/pages/clients/refer/additional-context.vue': {
-      routes:
-        | '/clients/refer/additional-context'
       views:
         | never
     }
@@ -435,15 +477,27 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'src/pages/clients/refer/company-contact.vue': {
+    'src/pages/clients/refer/bulk/internals/EditableCell.vue': {
       routes:
-        | '/clients/refer/company-contact'
+        | '/clients/refer/bulk/internals/EditableCell'
       views:
         | never
     }
-    'src/pages/clients/refer/company-details.vue': {
+    'src/pages/clients/refer/bulk/internals/EditableTable.vue': {
       routes:
-        | '/clients/refer/company-details'
+        | '/clients/refer/bulk/internals/EditableTable'
+      views:
+        | never
+    }
+    'src/pages/clients/refer/bulk/success.vue': {
+      routes:
+        | '/clients/refer/bulk/success'
+      views:
+        | never
+    }
+    'src/pages/clients/refer/success.vue': {
+      routes:
+        | '/clients/refer/success'
       views:
         | never
     }

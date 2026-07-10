@@ -1,57 +1,65 @@
 import { reactive, ref, computed, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import router from '@/router'
 import * as XLSX from 'xlsx'
 
 const STORAGE_KEY = 'bulk-referrals'
 
 export const FIELD_DEFS = [
-  { key: 'companyName', label: 'Company name', required: true },
-  { key: 'firstName', label: 'First name', required: true },
-  { key: 'lastName', label: 'Last name', required: true },
-  { key: 'email', label: 'Email', required: true },
-  { key: 'phone', label: 'Phone', required: false },
-  { key: 'jobTitle', label: 'Job title', required: false },
-  { key: 'companyWebsite', label: 'Company website', required: false },
-  { key: 'addressLine1', label: 'Address line 1', required: false },
-  { key: 'addressLine2', label: 'Address line 2', required: false },
-  { key: 'city', label: 'City', required: false },
-  { key: 'state', label: 'State', required: false },
-  { key: 'zip', label: 'ZIP code', required: false },
-  { key: 'salariedEmployees', label: 'Salaried employees', required: false },
-  { key: 'hourlyEmployees', label: 'Hourly employees', required: false },
-  { key: 'solution', label: 'Preferred solution', required: false },
-  { key: 'justworksBenefits', label: 'Interested in benefits', required: false },
+  { key: 'companyName', label: 'Company name' },
+  { key: 'firstName', label: 'First name' },
+  { key: 'lastName', label: 'Last name' },
+  { key: 'email', label: 'Email' },
+  { key: 'phone', label: 'Phone' },
+  { key: 'preferredContact', label: 'Preferred contact' },
 ]
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const PHONE_RE = /^\(\d{3}\) \d{3}-\d{4}$/
-const ZIP_RE = /^\d{5}(-\d{4})?$/
 
-function isValidUrl(str) {
-  try { new URL(str); return true } catch { return false }
+export const PREFERRED_CONTACT_OPTIONS = [
+  { value: 'email', label: 'Email' },
+  { value: 'phone', label: 'Phone' },
+  { value: 'either', label: "Doesn't matter" },
+]
+const PREFERRED_CONTACT_VALUES = PREFERRED_CONTACT_OPTIONS.map((o) => o.value)
+
+// Maps recognizable import-column text (varied casing/wording) to our
+// canonical preferredContact values. Returns null when nothing matches,
+// so getReferralErrors can flag it as invalid rather than silently guessing.
+function normalizePreferredContact(raw) {
+  const n = normalize(raw).replace(/'/g, '')
+  if (!n) return ''
+  if (n === 'email') return 'email'
+  if (n === 'phone' || n === 'phonenumber') return 'phone'
+  if (['either', 'doesntmatter', 'doesnotmatter', 'any', 'nopreference'].includes(n)) return 'either'
+  return null
 }
 
 export function getReferralErrors(referral) {
   const e = {}
+  if (!referral.companyName) e.companyName = 'Company name is required'
   if (!referral.firstName) e.firstName = 'First name is required'
   if (!referral.lastName) e.lastName = 'Last name is required'
-  if (!referral.email) e.email = 'Email is required'
-  else if (!EMAIL_RE.test(referral.email)) e.email = 'Enter a valid email address'
-  if (!referral.phone) e.phone = 'Phone number is required'
-  else if (!PHONE_RE.test(referral.phone)) e.phone = 'Enter a valid US phone number'
-  if (!referral.companyName) e.companyName = 'Company name is required'
-  if (referral.companyWebsite && !isValidUrl(referral.companyWebsite)) e.companyWebsite = 'Enter a valid URL'
-  if (!referral.addressLine1) e.addressLine1 = 'Address is required'
-  if (!referral.city) e.city = 'City is required'
-  if (!referral.state) e.state = 'State is required'
-  if (!referral.zip) e.zip = 'ZIP code is required'
-  else if (!ZIP_RE.test(referral.zip)) e.zip = 'Enter a valid ZIP code'
-  const sal = referral.salariedEmployees
-  if (sal === '' || sal === null || sal === undefined) e.salariedEmployees = 'Required'
-  else if (isNaN(Number(sal)) || Number(sal) < 0) e.salariedEmployees = 'Must be 0 or more'
-  const hrly = referral.hourlyEmployees
-  if (hrly === '' || hrly === null || hrly === undefined) e.hourlyEmployees = 'Required'
-  else if (isNaN(Number(hrly)) || Number(hrly) < 0) e.hourlyEmployees = 'Must be 0 or more'
+  if (referral.preferredContact === 'email') {
+    if (!referral.email) e.email = 'Email is required'
+    else if (!EMAIL_RE.test(referral.email)) e.email = 'Enter a valid email address'
+    if (referral.phone && !PHONE_RE.test(referral.phone)) e.phone = 'Enter a valid US phone number'
+  } else if (referral.preferredContact === 'phone') {
+    if (!referral.phone) e.phone = 'Phone is required'
+    else if (!PHONE_RE.test(referral.phone)) e.phone = 'Enter a valid US phone number'
+    if (referral.email && !EMAIL_RE.test(referral.email)) e.email = 'Enter a valid email address'
+  } else if (!referral.email && !referral.phone) {
+    e.email = 'Email or phone is required'
+    e.phone = 'Email or phone is required'
+  } else {
+    if (referral.email && !EMAIL_RE.test(referral.email)) e.email = 'Enter a valid email address'
+    if (referral.phone && !PHONE_RE.test(referral.phone)) e.phone = 'Enter a valid US phone number'
+  }
+  if (!referral.preferredContact) {
+    e.preferredContact = 'Preferred contact method is required'
+  } else if (!PREFERRED_CONTACT_VALUES.includes(referral.preferredContact)) {
+    e.preferredContact = 'Select a valid contact method'
+  }
   return e
 }
 
@@ -61,20 +69,9 @@ function makeReferral(overrides = {}) {
     companyName: '',
     firstName: '',
     lastName: '',
-    jobTitle: '',
     email: '',
     phone: '',
-    companyWebsite: '',
-    addressLine1: '',
-    addressLine2: '',
-    city: '',
-    state: '',
-    zip: '',
-    salariedEmployees: '',
-    hourlyEmployees: '',
-    solution: 'not-sure',
-    justworksBenefits: 'not-sure',
-    notes: '',
+    preferredContact: '',
     ...overrides,
   }
 }
@@ -97,6 +94,12 @@ export const parsedFile = ref(stored?.parsedFile ?? null)
 export const columnMapping = reactive(stored?.columnMapping ?? {})
 export const referrals = reactive(stored?.referrals ?? [])
 export const selectedId = ref(stored?.selectedId ?? null)
+
+// IDs of clients created by the last bulk submit — used by the success
+// interstitial to show which clients were just added. Persisted briefly
+// in sessionStorage so a page refresh on the success route still works.
+const storedSubmitted = JSON.parse(sessionStorage.getItem('bulk-submitted-ids') ?? 'null')
+export const lastSubmittedIds = ref(storedSubmitted ?? [])
 
 // --- Computed ---
 export const selectedReferral = computed(() =>
@@ -164,7 +167,16 @@ export function applyMapping(mapping) {
     for (const field of FIELD_DEFS) {
       const colHeader = mapping[field.key]
       if (colHeader && row[colHeader] != null && row[colHeader] !== '') {
-        overrides[field.key] = String(row[colHeader])
+        const raw = String(row[colHeader])
+        if (field.key === 'preferredContact') {
+          // Normalize recognizable variants (casing/wording); keep unrecognized
+          // text as-is so it surfaces as a validation error instead of being
+          // silently dropped or guessed at.
+          const normalized = normalizePreferredContact(raw)
+          overrides[field.key] = normalized === null ? raw : normalized
+        } else {
+          overrides[field.key] = raw
+        }
       }
     }
     return makeReferral(overrides)
@@ -174,10 +186,17 @@ export function applyMapping(mapping) {
   currentStep.value = 'review'
 }
 
+// Set whenever a referral is added that should be focused for editing as
+// soon as it's on screen — BulkReview.vue may not be mounted yet (e.g. "Add
+// manually" from the upload step), so it consumes this itself once it is.
+export const pendingFocusId = ref(null)
+
 export function addReferral() {
   const referral = makeReferral()
   referrals.push(referral)
   selectedId.value = referral.id
+  pendingFocusId.value = referral.id
+  return referral
 }
 
 export function removeReferral(id) {
@@ -195,7 +214,7 @@ export function getStatus(referral) {
 
 export async function submitAll() {
   const { clients } = await import('@/use/useClients')
-  const router = useRouter()
+  const ids = referrals.map((r) => r.id)
   for (const referral of referrals) {
     clients.value.push({
       id: referral.id,
@@ -203,11 +222,15 @@ export async function submitAll() {
       firstName: referral.firstName,
       lastName: referral.lastName,
       email: referral.email,
+      phone: referral.phone,
+      preferredContact: referral.preferredContact,
       status: 'pending',
     })
   }
+  lastSubmittedIds.value = ids
+  sessionStorage.setItem('bulk-submitted-ids', JSON.stringify(ids))
   clear()
-  router.push('/clients')
+  await router.push('/clients/refer/bulk/success')
 }
 
 export function clear() {
