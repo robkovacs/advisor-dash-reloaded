@@ -21,7 +21,7 @@ const statusLabel = {
   active: 'Active',
   pending: 'Referral',
   pending2: 'Onboarding',
-  declined: 'Archived',
+  declined: 'Inactive',
 }
 const statusVariant = {
   active: 'success',
@@ -33,7 +33,7 @@ const filters = [
   { label: 'Active', value: 'active' },
   { label: 'Referral', value: 'pending' },
   { label: 'Onboarding', value: 'pending2' },
-  { label: 'Archived', value: 'declined' },
+  { label: 'Inactive', value: 'declined' },
 ]
 
 const activeFilter = computed(() => route.query.status ?? 'active')
@@ -67,7 +67,7 @@ const sorted = computed(() => {
             </Button>
           </template>
           <MenuOption to="/clients/refer">Refer a client</MenuOption>
-          <MenuOption to="/clients/enroll">Enroll a client</MenuOption>
+          <MenuOption to="/clients/onboard">Onboard a client</MenuOption>
         </Menu>
       </Row>
       <SegmentedControl
@@ -98,14 +98,14 @@ const sorted = computed(() => {
       v-else
       :message="`No ${activeFilter ? statusLabel[activeFilter].toLowerCase() + ' ' : ''}clients yet.`"
     >
-      <Menu placement="bottom-end">
+      <Menu placement="bottom-end" v-if="activeFilter !== 'declined'">
         <template #trigger="{ toggle, isOpen }">
           <Button variant="secondary" :aria-expanded="isOpen" @click="toggle">
             Add client <IconCaretDownFill />
           </Button>
         </template>
         <MenuOption to="/clients/refer">Refer a client</MenuOption>
-        <MenuOption to="/clients/enroll">Enroll a client</MenuOption>
+        <MenuOption to="/clients/onboard">Onboard a client</MenuOption>
       </Menu>
     </EmptyState>
   </Stack>

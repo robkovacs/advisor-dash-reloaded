@@ -323,14 +323,13 @@ const contactName = computed(() => {
 })
 
 const preferredContactLabel = computed(() => {
-  const map = { email: 'Email', phone: 'Phone', either: "Doesn't matter" }
+  const map = { email: 'Email', phone: 'Phone' }
   return map[client.value?.preferredContact] ?? ''
 })
 
 const PREFERRED_OPTIONS = [
   { value: 'email', label: 'Email' },
   { value: 'phone', label: 'Phone' },
-  { value: 'either', label: "Doesn't matter" },
 ]
 
 const emailRequired = computed(() => client.value?.preferredContact === 'email')

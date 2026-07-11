@@ -50,13 +50,13 @@ const hasSetupItems = computed(() =>
         </FirmSetupCard>
         <FirmSetupCard
           variant="primary"
-          title="Start enrolling clients"
+          title="Start onboarding clients"
           description="If you and your clients are ready, jump right into getting their company on Justworks."
         >
           <template #icon><IconClipboardText /></template>
           <template #actions>
-            <Button to="/clients/enroll" variant="primary"
-              >Start enrollment</Button
+            <Button to="/clients/onboard" variant="primary"
+              >Start onboarding</Button
             >
           </template>
         </FirmSetupCard>

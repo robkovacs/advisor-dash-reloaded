@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import Stack from '@/components/Stack.vue'
 import Row from '@/components/Row.vue'
+import Columns from '@/components/Columns.vue'
 import Box from '@/components/Box.vue'
 import Button from '@/components/Button.vue'
 import Notice from '@/components/Notice.vue'
@@ -69,18 +70,41 @@ function addManual() {
         </Stack>
       </Box>
       <Stack gap="6" align="center" class="upload-content">
-        <Stack gap="2" class="info-details">
-          <h4 class="info-subheading">Include for each referral:</h4>
-          <ul class="info-list">
-            <li>Company name</li>
-            <li>Contact first and last name</li>
-            <li>Contact email or phone number</li>
-          </ul>
-          <p class="info-note">You can add more details after submitting.</p>
-        </Stack>
+        <Columns layout="1fr 1fr" gap="6">
+          <Stack gap="2" class="info-details">
+            <h3 class="info-subheading">Include for each referral:</h3>
+            <ul class="info-list">
+              <li>Company name</li>
+              <li>Primary contact's first name</li>
+              <li>Primary contact's last name</li>
+              <li>
+                Primary contact's email and/or phone number
+                <ul>
+                  <li>If you provide both: Preferred contact method</li>
+                </ul>
+              </li>
+            </ul>
+          </Stack>
+          <Stack gap="2" class="info-details">
+            <h3 class="info-subheading">Optional data to include:</h3>
+            <ul class="info-list">
+              <li>Company mailing address</li>
+              <li>Number of salaried employees</li>
+              <li>Number of hourly employees</li>
+              <li>Current payroll provider</li>
+              <li>
+                Interested in offering benefits through Justworks?
+                <ul>
+                  <li>If yes: current benefits provider</li>
+                  <li>If yes: Next benefits renewal date</li>
+                </ul>
+              </li>
+            </ul>
+          </Stack>
+        </Columns>
         <Notice>
-          Don't worry about column names; we'll do our best to match what you
-          have to what we need, and let you adjust if needed.
+          Don't worry about the column names in your document; in the next step,
+          we'll help you match your column names to the fields in our system.
         </Notice>
       </Stack>
     </Stack>
@@ -136,17 +160,26 @@ function addManual() {
 }
 
 .info-subheading {
-  font-weight: var(--font-weight-bold);
   margin-bottom: var(--space-2);
+}
+
+.info-list,
+.info-list ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
 }
 
 .info-list {
   list-style: disc;
   padding-left: var(--space-6);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  color: var(--color-text);
+}
+
+.info-list ul {
+  padding-top: var(--space-2);
+  list-style: circle;
+  padding-left: var(--space-4);
 }
 
 .info-footer {

@@ -1,18 +1,13 @@
 <script setup>
 import { computed } from 'vue'
 import { clients, getClientCompleteness } from '@/use/useClients'
-import { lastSubmittedIds } from '@/use/useBulkReferrals'
 import Stack from '@/components/Stack.vue'
 import Button from '@/components/Button.vue'
 import IconCheckCircle from '~icons/ph/check-circle-fill'
 
 definePage({ meta: { title: 'Referrals submitted' } })
 
-const submittedClients = computed(() =>
-  lastSubmittedIds.value
-    .map((id) => clients.value.find((c) => c.id === id))
-    .filter(Boolean),
-)
+const submittedClients = computed(() => [])
 
 function completenessForClient(client) {
   const { filled, total } = getClientCompleteness(client)

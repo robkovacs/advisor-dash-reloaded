@@ -18,38 +18,31 @@ import { focusFirstError } from '@/use/useFocusFirstError'
 const router = useRouter()
 
 const { defineField, handleSubmit, errors, submitCount } = useForm({
-  initialValues: {
-    preferredContact: 'either',
-  },
-  validationSchema: yup
-    .object({
-      companyName: yup.string().required('Company name is required'),
-      firstName: yup.string().required('First name is required'),
-      lastName: yup.string().required('Last name is required'),
-      preferredContact: yup.string(),
-      email: yup.string().when('preferredContact', ([pref], s) =>
-        pref === 'email'
-          ? s.required('Email is required').email('Enter a valid email address')
-          : s.email('Enter a valid email address'),
-      ),
-      phone: yup.string().when('preferredContact', ([pref], s) =>
-        pref === 'phone'
-          ? s.required('Phone is required').matches(/^\(\d{3}\) \d{3}-\d{4}$/, {
-              message: 'Enter a valid US phone number',
-              excludeEmptyString: true,
-            })
-          : s.matches(/^\(\d{3}\) \d{3}-\d{4}$/, {
-              message: 'Enter a valid US phone number',
-              excludeEmptyString: true,
-            }),
-      ),
-    })
-    .test('email-or-phone', 'Email or phone is required', function (values) {
-      if (values.preferredContact === 'either') {
-        return !!(values.email || values.phone)
-      }
-      return true
-    }),
+  validationSchema: yup.object({
+    companyName: yup.string().required('Company name is required'),
+    firstName: yup.string().required('First name is required'),
+    lastName: yup.string().required('Last name is required'),
+    preferredContact: yup
+      .string()
+      .required('Preferred contact method is required')
+      .oneOf(['email', 'phone']),
+    email: yup.string().when('preferredContact', ([pref], s) =>
+      pref === 'email'
+        ? s.required('Email is required').email('Enter a valid email address')
+        : s.email('Enter a valid email address'),
+    ),
+    phone: yup.string().when('preferredContact', ([pref], s) =>
+      pref === 'phone'
+        ? s.required('Phone is required').matches(/^\(\d{3}\) \d{3}-\d{4}$/, {
+            message: 'Enter a valid US phone number',
+            excludeEmptyString: true,
+          })
+        : s.matches(/^\(\d{3}\) \d{3}-\d{4}$/, {
+            message: 'Enter a valid US phone number',
+            excludeEmptyString: true,
+          }),
+    ),
+  }),
 })
 
 const [companyName] = defineField('companyName')
@@ -62,7 +55,6 @@ const [phone] = defineField('phone')
 const contactOptions = [
   { value: 'email', label: 'Email' },
   { value: 'phone', label: 'Phone' },
-  { value: 'either', label: "Doesn't matter" },
 ]
 
 const emailRequired = computed(() => preferredContact.value === 'email')
@@ -125,7 +117,7 @@ const onSubmit = handleSubmit((values) => {
         v-model="email"
         label="Email"
         :optional="!emailRequired"
-        :error="errors.email || (submitCount > 0 && preferredContact === 'either' && !phone ? errors[''] : undefined)"
+        :error="errors.email"
       />
       <InputPhone
         v-model="phone"

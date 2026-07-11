@@ -1,5 +1,6 @@
 import { reactive, ref, computed, watch } from 'vue'
 import router from '@/router'
+import { showToast } from '@/use/useToast'
 import * as XLSX from 'xlsx'
 
 const STORAGE_KEY = 'bulk-referrals'
@@ -13,13 +14,25 @@ export const FIELD_DEFS = [
   { key: 'preferredContact', label: 'Preferred contact' },
 ]
 
+export const OPTIONAL_FIELD_DEFS = [
+  { key: 'companyWebsite', label: 'Company website' },
+  { key: 'addressLine1', label: 'Address line 1' },
+  { key: 'addressLine2', label: 'Address line 2' },
+  { key: 'city', label: 'City' },
+  { key: 'state', label: 'State' },
+  { key: 'zip', label: 'ZIP code' },
+  { key: 'salariedEmployees', label: 'Salaried employees' },
+  { key: 'hourlyEmployees', label: 'Hourly employees' },
+  { key: 'solution', label: 'Preferred solution' },
+  { key: 'justworksBenefits', label: 'Interested in benefits' },
+]
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const PHONE_RE = /^\(\d{3}\) \d{3}-\d{4}$/
 
 export const PREFERRED_CONTACT_OPTIONS = [
   { value: 'email', label: 'Email' },
   { value: 'phone', label: 'Phone' },
-  { value: 'either', label: "Doesn't matter" },
 ]
 const PREFERRED_CONTACT_VALUES = PREFERRED_CONTACT_OPTIONS.map((o) => o.value)
 
@@ -31,7 +44,6 @@ function normalizePreferredContact(raw) {
   if (!n) return ''
   if (n === 'email') return 'email'
   if (n === 'phone' || n === 'phonenumber') return 'phone'
-  if (['either', 'doesntmatter', 'doesnotmatter', 'any', 'nopreference'].includes(n)) return 'either'
   return null
 }
 
@@ -40,6 +52,11 @@ export function getReferralErrors(referral) {
   if (!referral.companyName) e.companyName = 'Company name is required'
   if (!referral.firstName) e.firstName = 'First name is required'
   if (!referral.lastName) e.lastName = 'Last name is required'
+  if (!referral.preferredContact) {
+    e.preferredContact = 'Preferred contact method is required'
+  } else if (!PREFERRED_CONTACT_VALUES.includes(referral.preferredContact)) {
+    e.preferredContact = 'Select a valid contact method'
+  }
   if (referral.preferredContact === 'email') {
     if (!referral.email) e.email = 'Email is required'
     else if (!EMAIL_RE.test(referral.email)) e.email = 'Enter a valid email address'
@@ -48,17 +65,6 @@ export function getReferralErrors(referral) {
     if (!referral.phone) e.phone = 'Phone is required'
     else if (!PHONE_RE.test(referral.phone)) e.phone = 'Enter a valid US phone number'
     if (referral.email && !EMAIL_RE.test(referral.email)) e.email = 'Enter a valid email address'
-  } else if (!referral.email && !referral.phone) {
-    e.email = 'Email or phone is required'
-    e.phone = 'Email or phone is required'
-  } else {
-    if (referral.email && !EMAIL_RE.test(referral.email)) e.email = 'Enter a valid email address'
-    if (referral.phone && !PHONE_RE.test(referral.phone)) e.phone = 'Enter a valid US phone number'
-  }
-  if (!referral.preferredContact) {
-    e.preferredContact = 'Preferred contact method is required'
-  } else if (!PREFERRED_CONTACT_VALUES.includes(referral.preferredContact)) {
-    e.preferredContact = 'Select a valid contact method'
   }
   return e
 }
@@ -72,6 +78,18 @@ function makeReferral(overrides = {}) {
     email: '',
     phone: '',
     preferredContact: '',
+    // Optional enrichment fields
+    companyWebsite: '',
+    addressLine1: '',
+    addressLine2: '',
+    city: '',
+    state: '',
+    zip: '',
+    salariedEmployees: null,
+    hourlyEmployees: null,
+    solution: '',
+    justworksBenefits: '',
+    notes: '',
     ...overrides,
   }
 }
@@ -95,12 +113,6 @@ export const columnMapping = reactive(stored?.columnMapping ?? {})
 export const referrals = reactive(stored?.referrals ?? [])
 export const selectedId = ref(stored?.selectedId ?? null)
 
-// IDs of clients created by the last bulk submit — used by the success
-// interstitial to show which clients were just added. Persisted briefly
-// in sessionStorage so a page refresh on the success route still works.
-const storedSubmitted = JSON.parse(sessionStorage.getItem('bulk-submitted-ids') ?? 'null')
-export const lastSubmittedIds = ref(storedSubmitted ?? [])
-
 // --- Computed ---
 export const selectedReferral = computed(() =>
   referrals.find((r) => r.id === selectedId.value) ?? null
@@ -110,6 +122,7 @@ export const allValid = computed(() =>
   referrals.length > 0 &&
   referrals.every((r) => Object.keys(getReferralErrors(r)).length === 0)
 )
+
 
 // --- Persistence ---
 function persist() {
@@ -135,12 +148,20 @@ watch(selectedId, persist)
 export function autoMapColumns() {
   if (!parsedFile.value) return
   const headers = parsedFile.value.headers
-  for (const field of FIELD_DEFS) {
+  for (const field of [...FIELD_DEFS, ...OPTIONAL_FIELD_DEFS]) {
     const normKey = normalize(field.label)
     const match = headers.find((h) => normalize(h) === normKey)
     columnMapping[field.key] = match ?? ''
   }
 }
+
+// Optional fields that were auto-detected (or manually mapped) in the
+// uploaded spreadsheet. BulkMapping shows only these — we don't surface
+// fields the user never included so they don't feel like they did something
+// wrong by uploading a minimal spreadsheet.
+export const detectedOptionalFields = computed(() =>
+  OPTIONAL_FIELD_DEFS.filter((f) => columnMapping[f.key]),
+)
 
 export function parseFile(file) {
   const reader = new FileReader()
@@ -162,9 +183,10 @@ export function parseFile(file) {
 
 export function applyMapping(mapping) {
   Object.assign(columnMapping, mapping)
+  const allFields = [...FIELD_DEFS, ...OPTIONAL_FIELD_DEFS]
   const newReferrals = parsedFile.value.rows.map((row) => {
     const overrides = {}
-    for (const field of FIELD_DEFS) {
+    for (const field of allFields) {
       const colHeader = mapping[field.key]
       if (colHeader && row[colHeader] != null && row[colHeader] !== '') {
         const raw = String(row[colHeader])
@@ -178,6 +200,14 @@ export function applyMapping(mapping) {
           overrides[field.key] = raw
         }
       }
+    }
+    // If only one of email/phone was provided and no preferred contact was
+    // explicitly mapped, infer it from whichever one is present.
+    if (!overrides.preferredContact) {
+      const hasEmail = !!overrides.email
+      const hasPhone = !!overrides.phone
+      if (hasEmail && !hasPhone) overrides.preferredContact = 'email'
+      else if (hasPhone && !hasEmail) overrides.preferredContact = 'phone'
     }
     return makeReferral(overrides)
   })
@@ -213,8 +243,9 @@ export function getStatus(referral) {
 }
 
 export async function submitAll() {
+  if (!allValid.value) return
   const { clients } = await import('@/use/useClients')
-  const ids = referrals.map((r) => r.id)
+  const count = referrals.length
   for (const referral of referrals) {
     clients.value.push({
       id: referral.id,
@@ -227,10 +258,9 @@ export async function submitAll() {
       status: 'pending',
     })
   }
-  lastSubmittedIds.value = ids
-  sessionStorage.setItem('bulk-submitted-ids', JSON.stringify(ids))
   clear()
-  await router.push('/clients/refer/bulk/success')
+  showToast(`${count} ${count === 1 ? 'client' : 'clients'} added`)
+  await router.push('/clients?status=pending')
 }
 
 export function clear() {

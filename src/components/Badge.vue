@@ -4,11 +4,15 @@ defineProps({
     type: String,
     default: 'default',
   },
+  appearance: {
+    type: String,
+    default: 'primary',
+  },
 })
 </script>
 
 <template>
-  <span class="badge" :class="`badge--${variant}`">
+  <span class="badge" :class="[`badge--${variant}`, `badge--${appearance}`]">
     <slot />
   </span>
 </template>
@@ -44,5 +48,39 @@ defineProps({
 .badge--accent {
   background-color: var(--color-accent-subtle);
   color: var(--color-accent-text);
+}
+
+/* Appearance: secondary — dot + muted text */
+.badge--secondary {
+  background-color: transparent;
+  padding: 0;
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-muted);
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.badge--secondary::before {
+  content: '';
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: var(--border-radius-max);
+  flex-shrink: 0;
+}
+
+.badge--secondary.badge--default::before {
+  background-color: var(--color-text-muted);
+}
+
+.badge--secondary.badge--success::before {
+  background-color: var(--color-success-text);
+}
+
+.badge--secondary.badge--error::before {
+  background-color: var(--color-error);
+}
+
+.badge--secondary.badge--accent::before {
+  background-color: var(--color-accent-text);
 }
 </style>

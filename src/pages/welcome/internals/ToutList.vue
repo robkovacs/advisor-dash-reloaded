@@ -4,7 +4,7 @@ import IconCheckCircle from '~icons/ph/check-circle'
 const touts = [
   'Get notified before an important filing or deadline slips',
   'Run payroll and generate reports without switching between tools',
-  'Refer or enroll clients who aren’t already using Justworks',
+  'Refer or onboard clients who aren’t already using Justworks',
 ]
 </script>
 

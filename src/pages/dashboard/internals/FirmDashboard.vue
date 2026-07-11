@@ -1,11 +1,12 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import Stack from '@/components/Stack.vue'
 import Row from '@/components/Row.vue'
 import Button from '@/components/Button.vue'
 import Badge from '@/components/Badge.vue'
 import Menu from '@/components/Menu.vue'
 import MenuOption from '@/components/MenuOption.vue'
+import MultiSelect from '@/components/MultiSelect.vue'
 import IconCaretRight from '~icons/ph/caret-right'
 import IconCaretDownFill from '~icons/ph/caret-down-fill'
 import { currentUser } from '@/use/useCurrentUser'
@@ -15,6 +16,14 @@ import { firmMembers } from '@/use/useFirmMembers'
 
 const userFirstName = computed(() => currentUser.firstName || 'there')
 const firmName = computed(() => firm.name || 'your firm')
+
+const selectedReasons = ref([])
+const REASON_OPTIONS = [
+  { value: 'missing-info', label: 'Missing info' },
+  { value: 'awaiting-docs', label: 'Awaiting documents' },
+  { value: 'needs-review', label: 'Needs review' },
+  { value: 'stuck', label: 'Stuck' },
+]
 
 const totalClients = computed(() => clients.value.length)
 const activeClients = computed(() =>
@@ -45,7 +54,7 @@ const activeMembers = computed(() =>
           </Button>
         </template>
         <MenuOption to="/clients/refer">Refer a client</MenuOption>
-        <MenuOption to="/clients/enroll">Enroll a client</MenuOption>
+        <MenuOption to="/clients/onboard">Onboard a client</MenuOption>
       </Menu>
     </Row>
 
@@ -75,7 +84,14 @@ const activeMembers = computed(() =>
     </Stack>
 
     <Stack v-if="pendingClients.length" gap="4">
-      <h3>Needs attention</h3>
+      <Row align="center" justify="space-between">
+        <h3>Needs attention</h3>
+        <MultiSelect
+          v-model="selectedReasons"
+          label="Reason"
+          :options="REASON_OPTIONS"
+        />
+      </Row>
       <div class="attention-list">
         <RouterLink
           v-for="client in pendingClients"

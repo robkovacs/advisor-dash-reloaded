@@ -1,5 +1,9 @@
 <script setup>
 import { computed } from 'vue'
+import Stack from '@/components/Stack.vue'
+import IconBox from '@/components/IconBox.vue'
+import IconChecklist from '~icons/ph/list-checks-duotone'
+import Row from '@/components/Row.vue'
 
 const props = defineProps({
   sections: Array, // [{ label, filled, total }]
@@ -30,50 +34,63 @@ function sectionPct(s) {
 
 <template>
   <div class="completeness-card">
-    <h2 class="card-title">Referral completeness</h2>
+    <Stack gap="6">
+      <Stack gap="2">
+        <Row align="center">
+          <IconBox size="small"><IconChecklist /></IconBox>
+          <h3>Referral completeness</h3>
+        </Row>
+        <p class="text-muted">
+          The more information we have, the faster we can process your referral.
+        </p>
+      </Stack>
 
-    <div class="summary-row">
-      <div class="donut">
-        <svg viewBox="0 0 72 72" width="72" height="72" aria-hidden="true">
-          <circle
-            cx="36"
-            cy="36"
-            :r="RADIUS"
-            fill="none"
-            class="donut-track"
-            stroke-width="8"
-          />
-          <circle
-            cx="36"
-            cy="36"
-            :r="RADIUS"
-            fill="none"
-            class="donut-fill"
-            stroke-width="8"
-            stroke-linecap="round"
-            :stroke-dasharray="`${(pct / 100) * CIRC} ${CIRC}`"
-            transform="rotate(-90 36 36)"
-          />
-        </svg>
-        <span class="donut-pct">{{ pct }}%</span>
-      </div>
-      <div class="summary-text">
-        <span class="status-label">{{ statusLabel }}</span>
-        <span class="field-count">{{ filled }} of {{ total }} fields</span>
-      </div>
-    </div>
-
-    <div class="section-list">
-      <div v-for="s in sections" :key="s.label" class="section-item">
-        <div class="section-row">
-          <span class="section-name">{{ s.label }}</span>
-          <span class="section-pct">{{ sectionPct(s) }}%</span>
+      <div style="display: none" class="summary-row">
+        <div class="donut">
+          <svg viewBox="0 0 72 72" width="72" height="72" aria-hidden="true">
+            <circle
+              cx="36"
+              cy="36"
+              :r="RADIUS"
+              fill="none"
+              class="donut-track"
+              stroke-width="8"
+            />
+            <circle
+              cx="36"
+              cy="36"
+              :r="RADIUS"
+              fill="none"
+              class="donut-fill"
+              stroke-width="8"
+              stroke-linecap="round"
+              :stroke-dasharray="`${(pct / 100) * CIRC} ${CIRC}`"
+              transform="rotate(-90 36 36)"
+            />
+          </svg>
+          <span class="donut-pct">{{ pct }}%</span>
         </div>
-        <div class="progress-track">
-          <div class="progress-fill" :style="{ width: sectionPct(s) + '%' }" />
+        <div class="summary-text">
+          <span class="status-label">{{ statusLabel }}</span>
+          <span class="field-count">{{ filled }} of {{ total }} fields</span>
         </div>
       </div>
-    </div>
+
+      <Stack gap="4">
+        <Stack v-for="s in sections" :key="s.label" gap="2">
+          <Row align="baseline" justify="space-between">
+            <span class="section-name">{{ s.label }}</span>
+            <span class="section-pct">{{ sectionPct(s) }}%</span>
+          </Row>
+          <div class="progress-track">
+            <div
+              class="progress-fill"
+              :style="{ width: sectionPct(s) + '%' }"
+            />
+          </div>
+        </Stack>
+      </Stack>
+    </Stack>
   </div>
 </template>
 
@@ -98,7 +115,6 @@ function sectionPct(s) {
   display: flex;
   align-items: center;
   gap: var(--space-4);
-  margin-bottom: var(--space-3);
 }
 
 .donut {
@@ -138,31 +154,12 @@ function sectionPct(s) {
 }
 
 .status-label {
-  font-weight: var(--font-weight-bold);
   font-size: var(--font-size-md);
 }
 
 .field-count {
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
-}
-
-.section-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
-
-.section-item {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.section-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
 }
 
 .section-name {
