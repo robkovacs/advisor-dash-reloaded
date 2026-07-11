@@ -283,6 +283,20 @@ declare module 'vue-router/auto-routes' {
       { id: ParamValue<false> },
       | never
     >,
+    '/payrolls/': RouteRecordInfo<
+      '/payrolls/',
+      '/payrolls',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/payrolls/[id]': RouteRecordInfo<
+      '/payrolls/[id]',
+      '/payrolls/:id',
+      { id: ParamValue<true> },
+      { id: ParamValue<false> },
+      | never
+    >,
     '/welcome/': RouteRecordInfo<
       '/welcome/',
       '/welcome',
@@ -534,6 +548,18 @@ declare module 'vue-router/auto-routes' {
     'src/pages/firm-members/[id].vue': {
       routes:
         | '/firm-members/[id]'
+      views:
+        | never
+    }
+    'src/pages/payrolls/index.vue': {
+      routes:
+        | '/payrolls/'
+      views:
+        | never
+    }
+    'src/pages/payrolls/[id].vue': {
+      routes:
+        | '/payrolls/[id]'
       views:
         | never
     }

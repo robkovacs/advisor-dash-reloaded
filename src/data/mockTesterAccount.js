@@ -76,6 +76,10 @@ export const clients = [
     email: 'janet@riverstonelog.com',
     status: 'active',
     permissions: ['payroll_admin', 'benefits_admin'],
+    payCycles: [
+      { frequency: 'biweekly', payBasis: 'Salaried', countries: ['us', 'ca'] },
+      { frequency: 'biweekly', payBasis: 'Hourly', countries: ['us'] },
+    ],
   },
   {
     id: 'cli-002',
@@ -87,6 +91,9 @@ export const clients = [
     email: 'tom@bluebellcreative.com',
     status: 'active',
     permissions: ['payroll_admin'],
+    payCycles: [
+      { frequency: 'semi-monthly', payBasis: 'Salaried', countries: ['us'] },
+    ],
   },
   {
     id: 'cli-003',
@@ -98,6 +105,10 @@ export const clients = [
     email: 'donna@northgatemedical.com',
     status: 'active',
     permissions: ['payroll_admin', 'benefits_admin', 'hr_admin'],
+    payCycles: [
+      { frequency: 'biweekly', payBasis: 'Salaried', countries: ['us'] },
+      { frequency: 'monthly', payBasis: 'Off-cycle', countries: ['us'] },
+    ],
   },
   {
     id: 'cli-004',
@@ -109,6 +120,9 @@ export const clients = [
     email: 'carlos@solerabrewing.com',
     status: 'active',
     permissions: ['payroll_admin'],
+    payCycles: [
+      { frequency: 'weekly', payBasis: 'Hourly', countries: ['us'] },
+    ],
   },
   {
     id: 'cli-005',
@@ -120,6 +134,10 @@ export const clients = [
     email: 'lisa@halcyonsoftware.com',
     status: 'active',
     permissions: ['payroll_admin', 'benefits_admin'],
+    payCycles: [
+      { frequency: 'monthly', payBasis: 'Salaried', countries: ['us', 'gb', 'de'] },
+      { frequency: 'monthly', payBasis: 'Contractors', countries: ['us', 'in', 'ph'] },
+    ],
   },
   {
     id: 'cli-006',
@@ -153,5 +171,8 @@ export const clients = [
     email: 'greg@ironwoodfab.com',
     status: 'active',
     permissions: [],
+    payCycles: [
+      { frequency: 'biweekly', payBasis: 'Salaried', countries: ['us'] },
+    ],
   },
 ]
