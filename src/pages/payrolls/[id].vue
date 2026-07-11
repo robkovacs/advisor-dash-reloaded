@@ -18,7 +18,9 @@ const ancestors = computed(() => {
   return [
     { label: 'Payrolls', to: '/payrolls' },
     { label: payroll.value.companyName },
-    { label: `${capitalize(payroll.value.payBasis)} ${payroll.value.frequency}` },
+    {
+      label: `${capitalize(payroll.value.payBasis)} ${payroll.value.frequency}`,
+    },
   ]
 })
 
@@ -26,17 +28,33 @@ const pageTitle = computed(() =>
   payroll.value ? formatDate(payroll.value.debitDate) : 'Debit details',
 )
 
-const payroll = computed(() => payrolls.value.find((p) => p.id === route.params.id))
-const detail = computed(() => (payroll.value ? getPayrollDetail(payroll.value.id) : null))
+const payroll = computed(() =>
+  payrolls.value.find((p) => p.id === route.params.id),
+)
+const detail = computed(() =>
+  payroll.value ? getPayrollDetail(payroll.value.id) : null,
+)
 
-const STATUS_VARIANT = { completed: 'success', upcoming: 'default', processing: 'accent' }
-const STATUS_LABEL = { completed: 'Completed', upcoming: 'Upcoming', processing: 'Forecasted' }
+const STATUS_VARIANT = {
+  completed: 'success',
+  upcoming: 'default',
+  processing: 'accent',
+}
+const STATUS_LABEL = {
+  completed: 'Completed',
+  upcoming: 'Upcoming',
+  processing: 'Processing',
+}
 
 const CATEGORY_SECTIONS = [
   { key: 'totalPayments', heading: 'Total payments', tone: 'default' },
   { key: 'withholdings', heading: 'Withholdings', tone: 'negative' },
   { key: 'deductions', heading: 'Deductions', tone: 'negative' },
-  { key: 'employerContributions', heading: 'Employer contributions', tone: 'default' },
+  {
+    key: 'employerContributions',
+    heading: 'Employer contributions',
+    tone: 'default',
+  },
 ]
 
 const view = ref('category')
@@ -93,8 +111,8 @@ function isPast(iso) {
 const timeline = computed(() => {
   if (!detail.value) return []
   return [
-    { date: detail.value.periodStart, label: 'Period start' },
-    { date: detail.value.periodEnd, label: 'Period end' },
+    { date: detail.value.periodStart, label: 'Pay period start' },
+    { date: detail.value.periodEnd, label: 'Pay period end' },
     { date: detail.value.debitDate, label: 'Debit date' },
     { date: detail.value.payDate, label: 'Pay date' },
   ]
@@ -111,22 +129,21 @@ const timeline = computed(() => {
     </Row>
 
     <div class="info-card">
-      <Row align="center" justify="space-between">
-        <Badge>{{ capitalize(payroll.payBasis) }}</Badge>
-      </Row>
-      <h2 class="info-company">{{ payroll.companyName }}</h2>
-
       <div class="timeline">
         <div
           v-for="milestone in timeline"
           :key="milestone.label"
           class="timeline-point"
         >
-          <span class="timeline-date">{{ formatDate(milestone.date) }}</span>
           <div
             class="timeline-dot"
-            :class="isPast(milestone.date) ? 'timeline-dot--past' : 'timeline-dot--future'"
+            :class="
+              isPast(milestone.date)
+                ? 'timeline-dot--past'
+                : 'timeline-dot--future'
+            "
           />
+          <span class="timeline-date">{{ formatDate(milestone.date) }}</span>
           <span class="timeline-label">{{ milestone.label }}</span>
         </div>
       </div>
@@ -152,7 +169,9 @@ const timeline = computed(() => {
             <h3>{{ section.heading }}</h3>
             <span
               class="category-total"
-              :class="section.tone === 'negative' ? 'category-total--negative' : ''"
+              :class="
+                section.tone === 'negative' ? 'category-total--negative' : ''
+              "
               >{{ formatCurrency(detail.categories[section.key].total) }}</span
             >
           </Row>
@@ -176,9 +195,7 @@ const timeline = computed(() => {
                 aria-hidden="true"
               />
               <span class="item-label">{{ item.label }}</span>
-              <span class="item-amount">{{
-                formatCurrency(item.amount)
-              }}</span>
+              <span class="item-amount">{{ formatCurrency(item.amount) }}</span>
             </button>
             <div
               v-if="
@@ -257,10 +274,10 @@ const timeline = computed(() => {
 .timeline::before {
   content: '';
   position: absolute;
-  top: calc(var(--space-4) + 1.4rem);
-  left: var(--space-2);
-  right: var(--space-2);
-  height: 2px;
+  top: calc(var(--space-4) + 2px);
+  left: 0;
+  right: 0;
+  height: 1px;
   background: var(--color-line);
 }
 
@@ -268,7 +285,6 @@ const timeline = computed(() => {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: var(--space-1);
   z-index: 1;
 }
@@ -285,6 +301,7 @@ const timeline = computed(() => {
   border-radius: var(--border-radius-max);
   background: var(--color-bg);
   border: 2px solid var(--color-line);
+  margin-top: -4px;
 }
 
 .timeline-dot--past {

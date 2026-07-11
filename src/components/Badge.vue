@@ -55,7 +55,6 @@ defineProps({
   background-color: transparent;
   padding: 0;
   font-weight: var(--font-weight-regular);
-  color: var(--color-text-muted);
   gap: var(--space-2);
   align-items: center;
 }

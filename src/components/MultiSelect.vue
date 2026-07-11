@@ -115,7 +115,6 @@ function onPanelKeydown(e) {
       <Button
         ref="triggerRef"
         variant="secondary"
-        size="small"
         class="multi-select-trigger"
         :class="{ 'multi-select-trigger--active': selectedCount > 0 }"
         :aria-expanded="popoverRef?.isOpen.value"
@@ -181,6 +180,12 @@ function onPanelKeydown(e) {
 
 .multi-select-trigger--active {
   border-color: var(--color-accent);
+}
+
+@media (hover: hover) {
+  .multi-select-trigger--active:hover {
+    background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+  }
 }
 
 .count-badge {

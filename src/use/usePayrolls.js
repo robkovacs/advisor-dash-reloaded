@@ -1,5 +1,12 @@
 import { computed } from 'vue'
 import { clients } from './useClients'
+import { clients as mockClients } from '@/data/mockTesterAccount'
+
+// Lookup payCycles from mock data for clients that were seeded before
+// the payCycles field was added.
+const MOCK_PAY_CYCLES = Object.fromEntries(
+  mockClients.filter((c) => c.payCycles).map((c) => [c.id, c.payCycles]),
+)
 
 // Deterministic pseudo-random number from a string seed (xmur3 + mulberry32)
 function seededRandom(seed) {
@@ -67,9 +74,10 @@ function formatDateISO(date) {
 function getStatus(debitDate) {
   const today = new Date()
   today.setHours(0, 0, 0, 0)
-  const d = new Date(debitDate)
-  d.setHours(0, 0, 0, 0)
-  if (d.getTime() === today.getTime()) return 'processing'
+  const d = new Date(debitDate + 'T00:00:00')
+  const diffDays = Math.round((d - today) / (1000 * 60 * 60 * 24))
+  // Payrolls enter "processing" up to 5 days before the debit clears
+  if (diffDays >= 0 && diffDays <= 5) return 'processing'
   if (d < today) return 'completed'
   return 'upcoming'
 }
@@ -77,14 +85,18 @@ function getStatus(debitDate) {
 export const payrolls = computed(() => {
   const records = []
   for (const client of clients.value) {
-    if (client.status !== 'active' || !client.payCycles) continue
-    for (const cycle of client.payCycles) {
+    if (client.status !== 'active') continue
+    const cycles = client.payCycles || MOCK_PAY_CYCLES[client.id]
+    if (!cycles) continue
+    for (const cycle of cycles) {
       const dates = generateDebitDates(cycle.frequency)
       for (const date of dates) {
         const seed = `${client.id}-${cycle.payBasis}-${formatDateISO(date)}`
         const rand = seededRandom(seed)
         // Generate amount: base $20k–$200k scaled by randomness
         const amount = Math.round((20000 + rand * 180000) * 100) / 100
+        const employeeCountRand = seededRandom(`${seed}-employeeCount`)
+        const employeeCount = 3 + Math.floor(employeeCountRand * 10)
         records.push({
           id: seed,
           clientId: client.id,
@@ -94,7 +106,8 @@ export const payrolls = computed(() => {
           countries: cycle.countries,
           debitDate: formatDateISO(date),
           total: amount,
-          status: getStatus(date),
+          employeeCount,
+          status: getStatus(formatDateISO(date)),
         })
       }
     }

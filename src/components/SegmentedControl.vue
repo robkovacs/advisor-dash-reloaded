@@ -10,13 +10,17 @@ const props = defineProps({
     type: [String, Number, null],
     default: null,
   },
+  size: {
+    type: String,
+    default: 'default',
+  },
 })
 
 const emit = defineEmits(['update:modelValue'])
 </script>
 
 <template>
-  <div class="segmented-control" role="group">
+  <div class="segmented-control" :class="{ 'segmented-control--small': size === 'small' }" role="group">
     <button
       v-for="option in options"
       :key="option.value"
@@ -41,15 +45,20 @@ const emit = defineEmits(['update:modelValue'])
 .segmented-control {
   display: inline-flex;
   width: fit-content;
+  height: 2.5rem;
   background: var(--color-bg-subtle);
   border-radius: var(--border-radius-md);
   padding: 2px;
 }
 
+.segmented-control--small {
+  height: 2.25rem;
+}
+
 .segment {
   display: flex;
   gap: var(--space-2);
-  align-items: baseline;
+  align-items: center;
   padding: var(--space-1) var(--space-3);
   border: none;
   border-radius: calc(var(--border-radius-md) - 2px);

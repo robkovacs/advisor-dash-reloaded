@@ -304,7 +304,7 @@ function onInputKeydown(e) {
   transition: border-color 0.15s;
 }
 
-.range-wrapper:focus-within {
+.range-wrapper:has(input:focus-visible) {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
@@ -348,14 +348,16 @@ function onInputKeydown(e) {
   font-size: var(--font-size-lg);
   display: flex;
   align-items: center;
+  align-self: stretch;
   background: none;
   border: none;
+  margin: 0.1875rem;
+  margin-left: 0;
   padding: calc(var(--space-3) - 0.0625rem);
   border-radius: calc(var(--border-radius-md) - 0.25rem);
   cursor: pointer;
   color: var(--color-text);
   line-height: 0;
-  margin-right: 0.1875rem;
 }
 
 @media (hover: hover) {

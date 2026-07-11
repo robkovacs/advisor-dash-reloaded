@@ -9,6 +9,7 @@ import InputDateRange from '@/components/InputDateRange.vue'
 import Badge from '@/components/Badge.vue'
 import EmptyState from '@/components/EmptyState.vue'
 import PageHeader from '@/components/PageHeader.vue'
+import IconCaretUpDown from '~icons/ph/caret-up-down'
 import FlagUS from '~icons/circle-flags/us'
 import FlagCA from '~icons/circle-flags/ca'
 import FlagGB from '~icons/circle-flags/gb'
@@ -18,11 +19,44 @@ import FlagPH from '~icons/circle-flags/ph'
 
 definePage({ meta: { title: 'Payrolls' } })
 
-const FLAG_COMPONENTS = { us: FlagUS, ca: FlagCA, gb: FlagGB, de: FlagDE, in: FlagIN, ph: FlagPH }
-const STATUS_VARIANT = { completed: 'success', upcoming: 'default', processing: 'accent' }
-const STATUS_LABEL = { completed: 'Completed', upcoming: 'Upcoming', processing: 'Processing' }
+const FLAG_COMPONENTS = {
+  us: FlagUS,
+  ca: FlagCA,
+  gb: FlagGB,
+  de: FlagDE,
+  in: FlagIN,
+  ph: FlagPH,
+}
+const STATUS_VARIANT = {
+  completed: 'success',
+  upcoming: 'default',
+  processing: 'accent',
+}
+const STATUS_LABEL = {
+  completed: 'Completed',
+  upcoming: 'Upcoming',
+  processing: 'Processing',
+}
+
+const selectedStatuses = ref([])
+const STATUS_OPTIONS = [
+  { value: 'upcoming', label: 'Upcoming' },
+  { value: 'processing', label: 'Processing' },
+  { value: 'completed', label: 'Completed' },
+]
 
 const selectedClients = ref([])
+
+const SORT_OPTIONS = [
+  { value: 'date-desc', label: 'Date (newest first)' },
+  { value: 'date-asc', label: 'Date (oldest first)' },
+  { value: 'amount-desc', label: 'Amount (high to low)' },
+  { value: 'amount-asc', label: 'Amount (low to high)' },
+  { value: 'company-asc', label: 'Company (A–Z)' },
+  { value: 'company-desc', label: 'Company (Z–A)' },
+]
+
+const sortBy = ref('date-desc')
 
 const sixMonthsAgo = (() => {
   const d = new Date()
@@ -45,6 +79,10 @@ const clientOptions = computed(() =>
 const filteredPayrolls = computed(() => {
   let list = payrolls.value
 
+  if (selectedStatuses.value.length > 0) {
+    list = list.filter((p) => selectedStatuses.value.includes(p.status))
+  }
+
   if (selectedClients.value.length > 0) {
     list = list.filter((p) => selectedClients.value.includes(p.clientId))
   }
@@ -57,7 +95,18 @@ const filteredPayrolls = computed(() => {
     list = list.filter((p) => p.debitDate <= end)
   }
 
-  return list
+  const sorted = [...list]
+  const [field, dir] = sortBy.value.split('-')
+  sorted.sort((a, b) => {
+    let cmp = 0
+    if (field === 'date') cmp = a.debitDate.localeCompare(b.debitDate)
+    else if (field === 'amount') cmp = a.total - b.total
+    else if (field === 'company')
+      cmp = a.companyName.localeCompare(b.companyName)
+    return dir === 'desc' ? -cmp : cmp
+  })
+
+  return sorted
 })
 
 function capitalize(str) {
@@ -91,13 +140,35 @@ function formatDate(iso) {
 <template>
   <Stack gap="6">
     <PageHeader title="Payrolls" />
-    <Row gap="4" align="flex-end">
+    <Row gap="3" align="flex-end">
+      <MultiSelect
+        label="Status"
+        :options="STATUS_OPTIONS"
+        v-model="selectedStatuses"
+      />
       <MultiSelect
         label="Client"
         :options="clientOptions"
         v-model="selectedClients"
       />
-      <InputDateRange label="Date range" v-model="dateRange" hide-label />
+      <InputDateRange
+        label="Date range"
+        v-model="dateRange"
+        hide-label
+        hide-error
+      />
+      <div class="sort-control">
+        <IconCaretUpDown class="sort-icon" aria-hidden="true" />
+        <select v-model="sortBy" class="sort-select" aria-label="Sort payrolls">
+          <option
+            v-for="opt in SORT_OPTIONS"
+            :key="opt.value"
+            :value="opt.value"
+          >
+            {{ opt.label }}
+          </option>
+        </select>
+      </div>
     </Row>
     <div v-if="filteredPayrolls.length" class="payroll-list">
       <RouterLink
@@ -110,25 +181,29 @@ function formatDate(iso) {
           <span class="company-name">{{ payroll.companyName }}</span>
           <span class="cycle-desc">{{ cycleDescription(payroll) }}</span>
         </div>
-        <div class="payroll-flags">
-          <component
-            v-for="code in payroll.countries.slice(0, 3)"
-            :key="code"
-            :is="FLAG_COMPONENTS[code]"
-            class="flag-icon"
-          />
-          <span
-            v-if="payroll.countries.length > 3"
-            class="flag-overflow"
-          >+{{ payroll.countries.length - 3 }}</span>
+        <div class="payroll-date-status">
+          <span class="payroll-date">{{ formatDate(payroll.debitDate) }}</span>
+          <Badge
+            appearance="secondary"
+            :variant="STATUS_VARIANT[payroll.status]"
+            >{{ STATUS_LABEL[payroll.status] }}</Badge
+          >
         </div>
-        <span class="payroll-date">{{ formatDate(payroll.debitDate) }}</span>
+        <div class="payroll-people-flags">
+          <span class="payroll-people">{{ payroll.employeeCount }} people</span>
+          <div class="payroll-flags">
+            <component
+              v-for="code in payroll.countries.slice(0, 3)"
+              :key="code"
+              :is="FLAG_COMPONENTS[code]"
+              class="flag-icon"
+            />
+            <span v-if="payroll.countries.length > 3" class="flag-overflow"
+              >+{{ payroll.countries.length - 3 }}</span
+            >
+          </div>
+        </div>
         <span class="payroll-amount">{{ formatCurrency(payroll.total) }}</span>
-        <span class="payroll-status">
-          <Badge :variant="STATUS_VARIANT[payroll.status]">{{
-            STATUS_LABEL[payroll.status]
-          }}</Badge>
-        </span>
       </RouterLink>
     </div>
     <EmptyState v-else message="No payrolls found." />
@@ -136,10 +211,50 @@ function formatDate(iso) {
 </template>
 
 <style scoped>
+.sort-control {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.sort-icon {
+  position: absolute;
+  left: var(--space-3);
+  pointer-events: none;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-md);
+}
+
+.sort-select {
+  appearance: none;
+  border: 1px solid var(--color-input-border);
+  border-radius: var(--border-radius-md);
+  background: var(--color-bg);
+  padding: var(--space-2) var(--space-4) var(--space-2)
+    calc(var(--space-3) + 1em + var(--space-2));
+  font: inherit;
+  font-size: var(--font-size-md);
+  color: var(--color-text);
+  cursor: pointer;
+  height: 2.25rem;
+}
+
+@media (hover: hover) {
+  .sort-select:hover {
+    border-color: var(--color-input-border-hover);
+  }
+}
+
+.sort-select:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
 .payroll-list {
   display: grid;
-  grid-template-columns: 1fr auto auto auto auto;
-  column-gap: var(--space-4);
+  grid-template-columns: auto auto auto auto;
+  column-gap: var(--space-8);
   border: 1px solid var(--color-line);
   border-radius: var(--border-radius-md);
   overflow: hidden;
@@ -181,9 +296,35 @@ function formatDate(iso) {
   color: var(--color-text-muted);
 }
 
+.payroll-date-status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2);
+}
+
+.payroll-date {
+  font-size: var(--font-size-md);
+  white-space: nowrap;
+}
+
+.payroll-people-flags {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-ehd;
+  gap: var(--space-1);
+}
+
+.payroll-people {
+  font-size: var(--font-size-md);
+  white-space: nowrap;
+  text-align: right;
+}
+
 .payroll-flags {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
 }
 
 .flag-icon {
@@ -203,20 +344,12 @@ function formatDate(iso) {
   margin-left: var(--space-1);
 }
 
-.payroll-date {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
-  white-space: nowrap;
-}
-
 .payroll-amount {
   font-weight: var(--font-weight-bold);
+  color: var(--color-success-text);
+  font-size: var(--font-size-lg);
   text-align: right;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
-}
-
-.payroll-status {
-  justify-self: end;
 }
 </style>
