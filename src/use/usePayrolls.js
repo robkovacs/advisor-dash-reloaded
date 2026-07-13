@@ -1,6 +1,7 @@
 import { computed } from 'vue'
 import { clients } from './useClients'
 import { clients as mockClients } from '@/data/mockTesterAccount'
+import { US_STATES } from '@/data/usStates'
 
 // Lookup payCycles from mock data for clients that were seeded before
 // the payCycles field was added.
@@ -20,6 +21,10 @@ function seededRandom(seed) {
   let t = Math.imul(h ^ (h >>> 15), h | 1)
   t ^= t + Math.imul(t ^ (t >>> 7), t | 61)
   return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+}
+
+function round2(n) {
+  return Math.round(n * 100) / 100
 }
 
 function generateDebitDates(frequency, monthsBack = 6) {
@@ -82,6 +87,168 @@ function getStatus(debitDate) {
   return 'upcoming'
 }
 
+const FIRST_NAMES = [
+  'James', 'Mary', 'Robert', 'Patricia', 'John', 'Jennifer', 'Michael', 'Linda',
+  'David', 'Elizabeth', 'William', 'Barbara', 'Richard', 'Susan', 'Joseph', 'Jessica',
+  'Thomas', 'Sarah', 'Charles', 'Karen',
+]
+
+const LAST_NAMES = [
+  'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis',
+  'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas',
+  'Taylor', 'Moore', 'Jackson', 'Martin',
+]
+
+const STREET_NAMES = [
+  'Main St', 'Oak Ave', 'Maple Dr', 'Cedar Ln', 'Elm St',
+  'Park Ave', 'Washington Blvd', 'Lincoln Rd', '1st St', '2nd Ave',
+]
+
+const FILING_STATUSES = ['Single', 'Married', 'Head of Household']
+const DEPARTMENTS = [10, 20, 30, 40]
+
+const WITHHOLDINGS_LABELS = ['Federal Income Tax', 'Social Security', 'Medicare', 'State Income Tax', 'State Disability Insurance']
+const WITHHOLDINGS_PCTS = [0.45, 0.25, 0.06, 0.18, 0.06]
+const DEDUCTIONS_LABELS = ['401(k) (pre-tax)', '401(k) (post-tax)', 'Health insurance']
+const DEDUCTIONS_PCTS = [0.60, 0.20, 0.20]
+const EMPLOYER_CONTRIB_LABELS = ['State SUI Charge', 'Medicare - Employer', 'Social Security - Employer', 'Federal Unemployment Tax', 'Re-employment Service Fund']
+const EMPLOYER_CONTRIB_PCTS = [0.33, 0.12, 0.45, 0.05, 0.05]
+
+const CYCLE_LENGTHS = {
+  weekly: 7,
+  biweekly: 14,
+  'semi-monthly': 15,
+  monthly: 30,
+}
+
+function addDays(dateStr, days) {
+  const d = new Date(dateStr)
+  d.setDate(d.getDate() + days)
+  return d
+}
+
+// Seeded weights (0.7–1.3 variance) for splitting a total across `count` items.
+function generateWeights(count, seedPrefix) {
+  const weights = []
+  for (let i = 0; i < count; i++) {
+    const rand = seededRandom(`${seedPrefix}-w${i}`)
+    weights.push(0.7 + rand * 0.6)
+  }
+  return weights
+}
+
+// Distribute `total` proportionally across `weights`, rounded to 2 decimals
+// and adjusted so the items sum exactly to `total`.
+function distributeWithWeights(total, weights) {
+  const weightSum = weights.reduce((a, b) => a + b, 0)
+  const amounts = weights.map(w => round2(total * w / weightSum))
+  const roundedSum = amounts.slice(0, -1).reduce((a, b) => a + b, 0)
+  amounts[amounts.length - 1] = round2(total - roundedSum)
+  return amounts
+}
+
+// Split `total` into labeled items around target percentages, with ±5% seeded
+// variance per item, normalized so the items sum to `total`.
+function splitByPercentages(total, labels, targetPercentages, seedPrefix) {
+  const raw = targetPercentages.map((pct, i) => {
+    const rand = seededRandom(`${seedPrefix}-p${i}`)
+    const variance = (rand - 0.5) * 0.1 // ±5%
+    return Math.max(pct + variance, 0)
+  })
+  const rawSum = raw.reduce((a, b) => a + b, 0)
+  const amounts = raw.map(pct => round2(total * pct / rawSum))
+  const roundedSum = amounts.slice(0, -1).reduce((a, b) => a + b, 0)
+  amounts[amounts.length - 1] = round2(total - roundedSum)
+  return labels.map((label, i) => ({ label, amount: amounts[i] }))
+}
+
+// ── Employee roster ──────────────────────────────────────────────────────────
+//
+// Employees are stable per (client, payBasis, frequency) — the same roster of
+// people appears in every pay period of that cycle, so "year to date" figures
+// have a consistent person to accumulate against. Only each period's payroll
+// total (and therefore each employee's current-period amounts) varies.
+
+function getEmployeeRoster(clientId, payBasis, frequency) {
+  const rosterKey = `${clientId}-${payBasis}-${frequency}`
+  const client = clients.value.find(c => c.id === clientId)
+  const state = client?.state ||
+    US_STATES[Math.floor(seededRandom(`${rosterKey}-state`) * US_STATES.length)]
+  const city = client?.city || 'Springfield'
+
+  const employeeCount = 3 + Math.floor(seededRandom(`${rosterKey}-employeeCount`) * 10)
+  const payWeights = generateWeights(employeeCount, `${rosterKey}-payWeight`)
+
+  const today = new Date()
+
+  return payWeights.map((payWeight, i) => {
+    const firstNameIdx = Math.floor(seededRandom(`${rosterKey}-firstName${i}`) * FIRST_NAMES.length)
+    const lastNameIdx = Math.floor(seededRandom(`${rosterKey}-lastName${i}`) * LAST_NAMES.length)
+    const name = `${FIRST_NAMES[firstNameIdx]} ${LAST_NAMES[lastNameIdx]}`
+
+    const streetNum = 100 + Math.floor(seededRandom(`${rosterKey}-streetNum${i}`) * 9899)
+    const streetIdx = Math.floor(seededRandom(`${rosterKey}-street${i}`) * STREET_NAMES.length)
+    const zip = String(10000 + Math.floor(seededRandom(`${rosterKey}-zip${i}`) * 90000))
+
+    const hireYearsAgo = 1 + Math.floor(seededRandom(`${rosterKey}-hireYears${i}`) * 15)
+    const hireDate = new Date(today.getFullYear() - hireYearsAgo, Math.floor(seededRandom(`${rosterKey}-hireMonth${i}`) * 12), 1 + Math.floor(seededRandom(`${rosterKey}-hireDay${i}`) * 28))
+
+    const age = 22 + Math.floor(seededRandom(`${rosterKey}-age${i}`) * 43)
+    const birthDate = new Date(today.getFullYear() - age, Math.floor(seededRandom(`${rosterKey}-birthMonth${i}`) * 12), 1 + Math.floor(seededRandom(`${rosterKey}-birthDay${i}`) * 28))
+
+    const filingStatus = FILING_STATUSES[Math.floor(seededRandom(`${rosterKey}-filing${i}`) * FILING_STATUSES.length)]
+    const exemptions = Math.floor(seededRandom(`${rosterKey}-exemptions${i}`) * 3)
+    const department = DEPARTMENTS[Math.floor(seededRandom(`${rosterKey}-dept${i}`) * DEPARTMENTS.length)]
+
+    const withholdingsPct = 0.30 + seededRandom(`${rosterKey}-withholdingsPct${i}`) * 0.10 // 30-40%
+    const deductionsPct = 0.03 + seededRandom(`${rosterKey}-deductionsPct${i}`) * 0.05 // 3-8%
+
+    const hourlyRate = payBasis === 'Hourly'
+      ? round2(18 + seededRandom(`${rosterKey}-rate${i}`) * 27)
+      : null
+
+    const directDepositLast4 = String(1000 + Math.floor(seededRandom(`${rosterKey}-dd${i}`) * 9000))
+    const ssnLast4 = String(1000 + Math.floor(seededRandom(`${rosterKey}-ssn${i}`) * 9000))
+
+    return {
+      name,
+      employeeNumber: 1000 + i,
+      ssnLast4,
+      addressLine1: `${streetNum} ${STREET_NAMES[streetIdx]}`,
+      city,
+      state,
+      zip,
+      hireDate: formatDateISO(hireDate),
+      birthDate: formatDateISO(birthDate),
+      filingStatus,
+      exemptions,
+      department,
+      payWeight,
+      withholdingsPct,
+      deductionsPct,
+      hourlyRate,
+      directDepositLast4,
+    }
+  }).sort((a, b) => {
+    const lastNameOf = (n) => n.split(' ').slice(-1)[0]
+    const firstNameOf = (n) => n.split(' ')[0]
+    return lastNameOf(a.name).localeCompare(lastNameOf(b.name)) || firstNameOf(a.name).localeCompare(firstNameOf(b.name))
+  })
+}
+
+// Apply a specific pay period's total to a roster, producing each employee's
+// current-period gross/withholdings/deductions/net pay.
+function computeEmployeeAmounts(roster, total) {
+  const grossAmounts = distributeWithWeights(total, roster.map(e => e.payWeight))
+  return roster.map((emp, i) => {
+    const totalPay = grossAmounts[i]
+    const withholdings = round2(totalPay * emp.withholdingsPct)
+    const deductions = round2(totalPay * emp.deductionsPct)
+    const netPay = round2(totalPay - withholdings - deductions)
+    return { ...emp, totalPay, withholdings, deductions, netPay }
+  })
+}
+
 export const payrolls = computed(() => {
   const records = []
   for (const client of clients.value) {
@@ -90,13 +257,12 @@ export const payrolls = computed(() => {
     if (!cycles) continue
     for (const cycle of cycles) {
       const dates = generateDebitDates(cycle.frequency)
+      const employeeCount = getEmployeeRoster(client.id, cycle.payBasis, cycle.frequency).length
       for (const date of dates) {
         const seed = `${client.id}-${cycle.payBasis}-${formatDateISO(date)}`
         const rand = seededRandom(seed)
         // Generate amount: base $20k–$200k scaled by randomness
-        const amount = Math.round((20000 + rand * 180000) * 100) / 100
-        const employeeCountRand = seededRandom(`${seed}-employeeCount`)
-        const employeeCount = 3 + Math.floor(employeeCountRand * 10)
+        const amount = round2(20000 + rand * 180000)
         records.push({
           id: seed,
           clientId: client.id,
@@ -121,61 +287,69 @@ export function payrollsForClient(clientId) {
   return computed(() => payrolls.value.filter(p => p.clientId === clientId))
 }
 
-const FIRST_NAMES = [
-  'James', 'Mary', 'Robert', 'Patricia', 'John', 'Jennifer', 'Michael', 'Linda',
-  'David', 'Elizabeth', 'William', 'Barbara', 'Richard', 'Susan', 'Joseph', 'Jessica',
-  'Thomas', 'Sarah', 'Charles', 'Karen',
-]
+// For each roster employee, sum gross/withholdings/deductions/net pay (both
+// in total and per line item) across every pay period of the same client,
+// payBasis and frequency in the same calendar year up to and including this
+// payroll's debit date.
+function computeYtd(payroll, roster) {
+  const year = payroll.debitDate.slice(0, 4)
+  const priorRuns = payrolls.value
+    .filter(p =>
+      p.clientId === payroll.clientId &&
+      p.payBasis === payroll.payBasis &&
+      p.frequency === payroll.frequency &&
+      p.debitDate.slice(0, 4) === year &&
+      p.debitDate <= payroll.debitDate,
+    )
+    .sort((a, b) => a.debitDate.localeCompare(b.debitDate))
 
-const LAST_NAMES = [
-  'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis',
-  'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas',
-  'Taylor', 'Moore', 'Jackson', 'Martin',
-]
+  const acc = roster.map(() => ({
+    gross: 0,
+    withholdings: 0,
+    deductions: 0,
+    netPay: 0,
+    withholdingsByLabel: {},
+    deductionsByLabel: {},
+  }))
 
-const CYCLE_LENGTHS = {
-  weekly: 7,
-  biweekly: 14,
-  'semi-monthly': 15,
-  monthly: 30,
-}
+  for (const run of priorRuns) {
+    const runEmployees = computeEmployeeAmounts(roster, run.total)
+    const runWithholdingsTotal = round2(runEmployees.reduce((sum, e) => sum + e.withholdings, 0))
+    const runDeductionsTotal = round2(runEmployees.reduce((sum, e) => sum + e.deductions, 0))
 
-function addDays(dateStr, days) {
-  const d = new Date(dateStr)
-  d.setDate(d.getDate() + days)
-  return d
-}
+    const runWithholdingsItems = splitByPercentages(runWithholdingsTotal, WITHHOLDINGS_LABELS, WITHHOLDINGS_PCTS, `${run.id}-withholdingsSplit`)
+    const runDeductionsItems = splitByPercentages(runDeductionsTotal, DEDUCTIONS_LABELS, DEDUCTIONS_PCTS, `${run.id}-deductionsSplit`)
 
-// Distribute `total` across `count` items using seeded randomness, each item
-// getting a base share plus a random variance, rounded to 2 decimals and
-// adjusted so the items sum exactly to `total`.
-function distribute(total, count, seedPrefix) {
-  const weights = []
-  for (let i = 0; i < count; i++) {
-    const rand = seededRandom(`${seedPrefix}-w${i}`)
-    weights.push(0.7 + rand * 0.6) // 0.7–1.3 variance
+    const weights = roster.map(e => e.payWeight)
+    const withholdingsByItem = runWithholdingsItems.map(item => distributeWithWeights(item.amount, weights))
+    const deductionsByItem = runDeductionsItems.map(item => distributeWithWeights(item.amount, weights))
+
+    runEmployees.forEach((emp, i) => {
+      acc[i].gross += emp.totalPay
+      acc[i].withholdings += emp.withholdings
+      acc[i].deductions += emp.deductions
+      acc[i].netPay += emp.netPay
+      runWithholdingsItems.forEach((item, itemIdx) => {
+        acc[i].withholdingsByLabel[item.label] = (acc[i].withholdingsByLabel[item.label] || 0) + withholdingsByItem[itemIdx][i]
+      })
+      runDeductionsItems.forEach((item, itemIdx) => {
+        acc[i].deductionsByLabel[item.label] = (acc[i].deductionsByLabel[item.label] || 0) + deductionsByItem[itemIdx][i]
+      })
+    })
   }
-  const weightSum = weights.reduce((a, b) => a + b, 0)
-  const amounts = weights.map(w => Math.round((total * w / weightSum) * 100) / 100)
-  // Correct rounding drift on the last item so the total matches exactly.
-  const roundedSum = amounts.slice(0, -1).reduce((a, b) => a + b, 0)
-  amounts[amounts.length - 1] = Math.round((total - roundedSum) * 100) / 100
-  return amounts
-}
 
-// Split `total` into labeled items around target percentages, with ±5% seeded
-// variance per item, normalized so the items sum to `total`.
-function splitByPercentages(total, labels, targetPercentages, seedPrefix) {
-  const raw = targetPercentages.map((pct, i) => {
-    const rand = seededRandom(`${seedPrefix}-p${i}`)
-    const variance = (rand - 0.5) * 0.1 // ±5%
-    return Math.max(pct + variance, 0)
-  })
-  const rawSum = raw.reduce((a, b) => a + b, 0)
-  const amounts = raw.map(pct => Math.round((total * pct / rawSum) * 100) / 100)
-  const roundedSum = amounts.slice(0, -1).reduce((a, b) => a + b, 0)
-  amounts[amounts.length - 1] = Math.round((total - roundedSum) * 100) / 100
-  return labels.map((label, i) => ({ label, amount: amounts[i] }))
+  return acc.map((a) => ({
+    gross: round2(a.gross),
+    withholdings: round2(a.withholdings),
+    deductions: round2(a.deductions),
+    netPay: round2(a.netPay),
+    withholdingsByLabel: Object.fromEntries(
+      Object.entries(a.withholdingsByLabel).map(([label, amount]) => [label, round2(amount)]),
+    ),
+    deductionsByLabel: Object.fromEntries(
+      Object.entries(a.deductionsByLabel).map(([label, amount]) => [label, round2(amount)]),
+    ),
+  }))
 }
 
 export function getPayrollDetail(payrollId) {
@@ -190,62 +364,36 @@ export function getPayrollDetail(payrollId) {
   const periodEnd = formatDateISO(periodEndDate)
   const payDate = formatDateISO(addDays(debitDate, 3))
 
-  // Employee count: 3-12, seeded
-  const employeeCountRand = seededRandom(`${payrollId}-employeeCount`)
-  const employeeCount = 3 + Math.floor(employeeCountRand * 10)
+  const roster = getEmployeeRoster(payroll.clientId, payroll.payBasis, payroll.frequency)
+  const ytdByEmployee = computeYtd(payroll, roster)
 
-  const totalPayShares = distribute(payroll.total, employeeCount, `${payrollId}-totalPay`)
+  const employees = computeEmployeeAmounts(roster, payroll.total).map((emp, i) => ({
+    ...emp,
+    hoursThisPeriod: emp.hourlyRate ? round2(emp.totalPay / emp.hourlyRate) : null,
+    voucherNumber: 100000 + Math.floor(seededRandom(`${payrollId}-voucher${i}`) * 900000),
+    ytd: ytdByEmployee[i],
+  }))
 
-  const employees = totalPayShares.map((totalPay, i) => {
-    const firstNameIdx = Math.floor(seededRandom(`${payrollId}-firstName${i}`) * FIRST_NAMES.length)
-    const lastNameIdx = Math.floor(seededRandom(`${payrollId}-lastName${i}`) * LAST_NAMES.length)
-    const name = `${FIRST_NAMES[firstNameIdx]} ${LAST_NAMES[lastNameIdx]}`
-
-    const withholdingsPct = 0.30 + seededRandom(`${payrollId}-withholdingsPct${i}`) * 0.10 // 30-40%
-    const deductionsPct = 0.03 + seededRandom(`${payrollId}-deductionsPct${i}`) * 0.05 // 3-8%
-
-    const withholdings = Math.round(totalPay * withholdingsPct * 100) / 100
-    const deductions = Math.round(totalPay * deductionsPct * 100) / 100
-    const netPay = Math.round((totalPay - withholdings - deductions) * 100) / 100
-
-    return { name, totalPay, withholdings, deductions, netPay }
-  })
-
-  const totalPaymentsTotal = Math.round(
-    employees.reduce((sum, e) => sum + e.totalPay, 0) * 100
-  ) / 100
-  const withholdingsTotal = Math.round(
-    employees.reduce((sum, e) => sum + e.withholdings, 0) * 100
-  ) / 100
-  const deductionsTotal = Math.round(
-    employees.reduce((sum, e) => sum + e.deductions, 0) * 100
-  ) / 100
+  const totalPaymentsTotal = round2(employees.reduce((sum, e) => sum + e.totalPay, 0))
+  const withholdingsTotal = round2(employees.reduce((sum, e) => sum + e.withholdings, 0))
+  const deductionsTotal = round2(employees.reduce((sum, e) => sum + e.deductions, 0))
 
   const totalPaymentsLabel = payroll.payBasis === 'Hourly' ? 'Hourly wages' : 'Salary'
 
-  const withholdingsItems = splitByPercentages(
-    withholdingsTotal,
-    ['Federal Income Tax', 'Social Security', 'Medicare', 'State Income Tax', 'State Disability Insurance'],
-    [0.45, 0.25, 0.06, 0.18, 0.06],
-    `${payrollId}-withholdingsSplit`
-  )
+  const withholdingsItems = splitByPercentages(withholdingsTotal, WITHHOLDINGS_LABELS, WITHHOLDINGS_PCTS, `${payrollId}-withholdingsSplit`)
+  const deductionsItems = splitByPercentages(deductionsTotal, DEDUCTIONS_LABELS, DEDUCTIONS_PCTS, `${payrollId}-deductionsSplit`)
 
-  const deductionsItems = splitByPercentages(
-    deductionsTotal,
-    ['401(k) (pre-tax)', '401(k) (post-tax)', 'Health insurance'],
-    [0.60, 0.20, 0.20],
-    `${payrollId}-deductionsSplit`
-  )
-
-  // Add per-employee breakdown to each category item
-  function addEmployeeBreakdown(items, categoryKey) {
-    return items.map((item, itemIdx) => {
-      const perEmployee = distribute(item.amount, employees.length, `${payrollId}-${categoryKey}-${itemIdx}-emp`)
+  // Add per-employee breakdown to each category item, proportional to each
+  // employee's stable pay weight.
+  function addEmployeeBreakdown(items) {
+    const weights = employees.map(e => e.payWeight)
+    return items.map((item) => {
+      const perEmployee = distributeWithWeights(item.amount, weights)
       return {
         ...item,
-        byEmployee: employees.map((emp, empIdx) => ({
+        byEmployee: employees.map((emp, i) => ({
           name: emp.name,
-          amount: perEmployee[empIdx],
+          amount: perEmployee[i],
         })),
       }
     })
@@ -253,23 +401,16 @@ export function getPayrollDetail(payrollId) {
 
   const totalPaymentsItems = addEmployeeBreakdown(
     [{ label: totalPaymentsLabel, amount: totalPaymentsTotal }],
-    'totalPay',
   )
-  const withholdingsItemsWithEmp = addEmployeeBreakdown(withholdingsItems, 'withholdings')
-  const deductionsItemsWithEmp = addEmployeeBreakdown(deductionsItems, 'deductions')
+  const withholdingsItemsWithEmp = addEmployeeBreakdown(withholdingsItems)
+  const deductionsItemsWithEmp = addEmployeeBreakdown(deductionsItems)
 
-  const employerContributionsTotal = Math.round(
-    totalPaymentsTotal * (0.12 + (seededRandom(`${payrollId}-erContribPct`) - 0.5) * 0.02) * 100
-  ) / 100
+  const employerContributionsTotal = round2(
+    totalPaymentsTotal * (0.12 + (seededRandom(`${payrollId}-erContribPct`) - 0.5) * 0.02),
+  )
 
   const employerContributionsItems = addEmployeeBreakdown(
-    splitByPercentages(
-      employerContributionsTotal,
-      ['State SUI Charge', 'Medicare - Employer', 'Social Security - Employer', 'Federal Unemployment Tax', 'Re-employment Service Fund'],
-      [0.33, 0.12, 0.45, 0.05, 0.05],
-      `${payrollId}-erContribSplit`
-    ),
-    'erContrib',
+    splitByPercentages(employerContributionsTotal, EMPLOYER_CONTRIB_LABELS, EMPLOYER_CONTRIB_PCTS, `${payrollId}-erContribSplit`),
   )
 
   return {

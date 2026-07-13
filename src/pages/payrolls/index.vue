@@ -142,14 +142,14 @@ function formatDate(iso) {
     <PageHeader title="Payrolls" />
     <Row gap="3" align="flex-end">
       <MultiSelect
-        label="Status"
-        :options="STATUS_OPTIONS"
-        v-model="selectedStatuses"
-      />
-      <MultiSelect
         label="Client"
         :options="clientOptions"
         v-model="selectedClients"
+      />
+      <MultiSelect
+        label="Status"
+        :options="STATUS_OPTIONS"
+        v-model="selectedStatuses"
       />
       <InputDateRange
         label="Date range"
