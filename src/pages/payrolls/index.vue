@@ -347,7 +347,7 @@ function formatDate(iso) {
 
 .payroll-amount {
   font-weight: var(--font-weight-bold);
-  color: var(--color-success-text);
+  color: var(--color-accent-text);
   font-size: var(--font-size-lg);
   text-align: right;
   font-variant-numeric: tabular-nums;
