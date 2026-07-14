@@ -52,14 +52,6 @@ const payCyclesDisplay = computed(() => {
 
 <template>
   <Stack gap="6">
-    <Row align="center" justify="space-between">
-      <PageHeader
-        :ancestors="ancestors"
-        :title="client.companyName || 'Unnamed client'"
-      />
-      <Badge variant="success">Active</Badge>
-    </Row>
-
     <Stack gap="6">
       <div class="info-card">
         <Stack gap="4">
