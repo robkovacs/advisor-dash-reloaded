@@ -293,7 +293,7 @@ function formatDate(iso) {
 }
 
 .cycle-desc {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-md);
   color: var(--color-text-muted);
 }
 
