@@ -20,7 +20,11 @@ const emit = defineEmits(['update:modelValue'])
 </script>
 
 <template>
-  <div class="segmented-control" :class="{ 'segmented-control--small': size === 'small' }" role="group">
+  <div
+    class="segmented-control"
+    :class="{ 'segmented-control--small': size === 'small' }"
+    role="group"
+  >
     <button
       v-for="option in options"
       :key="option.value"
@@ -46,7 +50,7 @@ const emit = defineEmits(['update:modelValue'])
   display: inline-flex;
   width: fit-content;
   height: 2.5rem;
-  background: var(--color-bg-subtle);
+  background: var(--color-bg-muted);
   border-radius: var(--border-radius-md);
   padding: 2px;
 }

@@ -142,6 +142,34 @@ declare module 'vue-router/auto-routes' {
       { id: ParamValue<false> },
       | never
     >,
+    '/clients/internals/ClientDetailActive': RouteRecordInfo<
+      '/clients/internals/ClientDetailActive',
+      '/clients/internals/ClientDetailActive',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/clients/internals/ClientDetailInactive': RouteRecordInfo<
+      '/clients/internals/ClientDetailInactive',
+      '/clients/internals/ClientDetailInactive',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/clients/internals/ClientDetailOnboarding': RouteRecordInfo<
+      '/clients/internals/ClientDetailOnboarding',
+      '/clients/internals/ClientDetailOnboarding',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/clients/internals/ClientDetailReferral': RouteRecordInfo<
+      '/clients/internals/ClientDetailReferral',
+      '/clients/internals/ClientDetailReferral',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/clients/internals/CompletenessCard': RouteRecordInfo<
       '/clients/internals/CompletenessCard',
       '/clients/internals/CompletenessCard',
@@ -425,6 +453,30 @@ declare module 'vue-router/auto-routes' {
     'src/pages/clients/[id].vue': {
       routes:
         | '/clients/[id]'
+      views:
+        | never
+    }
+    'src/pages/clients/internals/ClientDetailActive.vue': {
+      routes:
+        | '/clients/internals/ClientDetailActive'
+      views:
+        | never
+    }
+    'src/pages/clients/internals/ClientDetailInactive.vue': {
+      routes:
+        | '/clients/internals/ClientDetailInactive'
+      views:
+        | never
+    }
+    'src/pages/clients/internals/ClientDetailOnboarding.vue': {
+      routes:
+        | '/clients/internals/ClientDetailOnboarding'
+      views:
+        | never
+    }
+    'src/pages/clients/internals/ClientDetailReferral.vue': {
+      routes:
+        | '/clients/internals/ClientDetailReferral'
       views:
         | never
     }

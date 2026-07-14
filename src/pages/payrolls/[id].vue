@@ -5,6 +5,8 @@ import { payrolls, getPayrollDetail } from '@/use/usePayrolls'
 import Stack from '@/components/Stack.vue'
 import Row from '@/components/Row.vue'
 import Badge from '@/components/Badge.vue'
+import Button from '@/components/Button.vue'
+import IconDownload from '~icons/ph/download-simple'
 import PageHeader from '@/components/PageHeader.vue'
 import SegmentedControl from '@/components/SegmentedControl.vue'
 import EmptyState from '@/components/EmptyState.vue'
@@ -51,7 +53,8 @@ const debitTotal = computed(() => {
   return (
     Math.round(
       (detail.value.categories.totalPayments.total +
-        detail.value.categories.employerContributions.total) *
+        detail.value.categories.employerTaxes.total +
+        detail.value.categories.employerBenefits.total) *
         100,
     ) / 100
   )
@@ -72,24 +75,32 @@ const netPayTotal = computed(() => {
 const cashRequirementsItems = computed(() => {
   if (!detail.value) return []
 
-  // Employer contributions are broken down per line item (e.g. State SUI,
-  // Employer Medicare), each with its own byEmployee split — sum across
-  // those items to get each employee's total employer-tax contribution.
-  const employerContribByEmployee = detail.value.employees.map((e) => {
-    const total = detail.value.categories.employerContributions.items.reduce(
+  // Employer costs (taxes + benefits) per employee, summed from both categories.
+  const employerCostByEmployee = detail.value.employees.map((e) => {
+    const taxTotal = detail.value.categories.employerTaxes.items.reduce(
       (sum, item) => {
         const match = item.byEmployee?.find((be) => be.name === e.name)
         return sum + (match ? match.amount : 0)
       },
       0,
     )
-    return { name: e.name, amount: Math.round(total * 100) / 100 }
+    const benTotal = detail.value.categories.employerBenefits.items.reduce(
+      (sum, item) => {
+        const match = item.byEmployee?.find((be) => be.name === e.name)
+        return sum + (match ? match.amount : 0)
+      },
+      0,
+    )
+    return {
+      name: e.name,
+      amount: Math.round((taxTotal + benTotal) * 100) / 100,
+    }
   })
 
   const taxDepositsByEmployee = detail.value.employees.map((e, i) => ({
     name: e.name,
     amount:
-      Math.round((e.withholdings + employerContribByEmployee[i].amount) * 100) /
+      Math.round((e.withholdings + employerCostByEmployee[i].amount) * 100) /
       100,
   }))
 
@@ -107,7 +118,8 @@ const cashRequirementsItems = computed(() => {
       amount:
         Math.round(
           (detail.value.categories.withholdings.total +
-            detail.value.categories.employerContributions.total) *
+            detail.value.categories.employerTaxes.total +
+            detail.value.categories.employerBenefits.total) *
             100,
         ) / 100,
       byEmployee: taxDepositsByEmployee,
@@ -130,15 +142,21 @@ const journalDebits = computed(() => {
   return [
     {
       key: 'wagesExpense',
-      heading: 'Wages Expense',
+      heading: 'Wages expense',
       total: detail.value.categories.totalPayments.total,
       items: detail.value.categories.totalPayments.items,
     },
     {
       key: 'payrollTaxExpense',
-      heading: 'Payroll Tax Expense',
-      total: detail.value.categories.employerContributions.total,
-      items: detail.value.categories.employerContributions.items,
+      heading: 'Payroll tax expense',
+      total: detail.value.categories.employerTaxes.total,
+      items: detail.value.categories.employerTaxes.items,
+    },
+    {
+      key: 'employerBenefitsExpense',
+      heading: 'Employee benefits expense',
+      total: detail.value.categories.employerBenefits.total,
+      items: detail.value.categories.employerBenefits.items,
     },
   ]
 })
@@ -148,7 +166,7 @@ const journalCredits = computed(() => {
   return [
     {
       key: 'netPayPayable',
-      heading: 'Net Pay Payable',
+      heading: 'Net pay payable',
       total: netPayTotal.value,
       items: [
         {
@@ -163,21 +181,27 @@ const journalCredits = computed(() => {
     },
     {
       key: 'withholdingsPayable',
-      heading: 'Withholdings Payable',
+      heading: 'Withholdings payable',
       total: detail.value.categories.withholdings.total,
       items: detail.value.categories.withholdings.items,
     },
     {
       key: 'deductionsPayable',
-      heading: 'Deductions Payable',
+      heading: 'Deductions payable',
       total: detail.value.categories.deductions.total,
       items: detail.value.categories.deductions.items,
     },
     {
       key: 'employerTaxPayable',
-      heading: 'Employer Payroll Tax Payable',
-      total: detail.value.categories.employerContributions.total,
-      items: detail.value.categories.employerContributions.items,
+      heading: 'Payroll tax payable',
+      total: detail.value.categories.employerTaxes.total,
+      items: detail.value.categories.employerTaxes.items,
+    },
+    {
+      key: 'employerBenefitsPayable',
+      heading: 'Benefits payable',
+      total: detail.value.categories.employerBenefits.total,
+      items: detail.value.categories.employerBenefits.items,
     },
   ]
 })
@@ -328,7 +352,7 @@ const timeline = computed(() => {
       }}</Badge>
     </Row>
 
-    <Stack gap="4">
+    <div class="info-card">
       <div class="timeline">
         <div
           v-for="milestone in timeline"
@@ -343,43 +367,51 @@ const timeline = computed(() => {
                 : 'timeline-dot--future'
             "
           />
-          <span class="timeline-date">{{ formatDate(milestone.date) }}</span>
-          <span class="timeline-label">{{ milestone.label }}</span>
+          <div class="timeline-text">
+            <span class="timeline-label">{{ milestone.label }}</span>
+            <span class="timeline-date">{{ formatDate(milestone.date) }}</span>
+          </div>
         </div>
       </div>
 
-      <h3 class="overview-heading">Overview</h3>
-      <div class="overview-subtotals">
-        <Row justify="space-between">
-          <span class="subtotal-label">Gross wages</span>
-          <span class="subtotal-amount">{{
-            formatCurrency(detail.categories.totalPayments.total)
-          }}</span>
-        </Row>
-        <Row justify="space-between">
-          <span class="subtotal-label">Employer taxes</span>
-          <span class="subtotal-amount">{{
-            formatCurrency(detail.categories.employerContributions.total)
-          }}</span>
-        </Row>
+      <div class="overview">
+        <h3>Overview</h3>
+        <div class="overview-subtotals">
+          <Row justify="space-between">
+            <span class="subtotal-label">Gross wages</span>
+            <span class="subtotal-amount">{{
+              formatCurrency(detail.categories.totalPayments.total)
+            }}</span>
+          </Row>
+          <Row justify="space-between">
+            <span class="subtotal-label">Employer taxes</span>
+            <span class="subtotal-amount">{{
+              formatCurrency(detail.categories.employerTaxes.total)
+            }}</span>
+          </Row>
+          <Row justify="space-between">
+            <span class="subtotal-label">Employer benefits</span>
+            <span class="subtotal-amount">{{
+              formatCurrency(detail.categories.employerBenefits.total)
+            }}</span>
+          </Row>
+        </div>
+        <div class="estimated-total">
+          <span class="total-label">Total cost to employer</span>
+          <span class="total-amount">{{ formatCurrency(debitTotal) }}</span>
+        </div>
       </div>
-      <div class="estimated-total">
-        <span class="total-label">Total cost to employer</span>
-        <span class="total-amount">{{ formatCurrency(debitTotal) }}</span>
-      </div>
-    </Stack>
+    </div>
 
-    <SegmentedControl v-model="view" :options="VIEW_OPTIONS" />
+    <Row gap="6" justify="space-between">
+      <SegmentedControl v-model="view" :options="VIEW_OPTIONS" />
+      <Button><IconDownload /> Download</Button>
+    </Row>
 
     <div v-if="view === 'cash'" class="reports-view">
       <div class="report-card report-card--highlight">
         <Row class="report-card-header" justify="space-between" align="center">
-          <div>
-            <h3>Cash Requirements Report</h3>
-            <p class="report-card-subtitle">
-              Total cash required to fund this debit
-            </p>
-          </div>
+          <h3>Total cash required</h3>
           <span class="report-card-total">{{
             formatCurrency(debitTotal)
           }}</span>
@@ -426,21 +458,16 @@ const timeline = computed(() => {
 
     <div v-else-if="view === 'journal'" class="reports-view">
       <div class="report-card">
-        <h3>Payroll Journal</h3>
-        <p class="report-card-subtitle">
-          Double-entry accounting for this payroll run
-        </p>
-
         <div class="journal-columns">
           <div class="journal-column">
-            <h4 class="journal-column-heading">Debits</h4>
+            <h3 class="journal-column-heading">Debits</h3>
             <div
               v-for="section in journalDebits"
               :key="section.key"
               class="category-section"
             >
               <Row class="category-header" justify="space-between">
-                <h5>{{ section.heading }}</h5>
+                <h4>{{ section.heading }}</h4>
                 <span class="category-total">{{
                   formatCurrency(section.total)
                 }}</span>
@@ -496,14 +523,14 @@ const timeline = computed(() => {
           </div>
 
           <div class="journal-column">
-            <h4 class="journal-column-heading">Credits</h4>
+            <h3 class="journal-column-heading">Credits</h3>
             <div
               v-for="section in journalCredits"
               :key="section.key"
               class="category-section"
             >
               <Row class="category-header" justify="space-between">
-                <h5>{{ section.heading }}</h5>
+                <h4>{{ section.heading }}</h4>
                 <span class="category-total">{{
                   formatCurrency(section.total)
                 }}</span>
@@ -562,7 +589,6 @@ const timeline = computed(() => {
     </div>
 
     <div v-else-if="view === 'person'" class="person-view">
-      <h3>Payroll Register</h3>
       <div class="paystub-list">
         <div
           v-for="emp in employeePaystubs"
@@ -600,7 +626,7 @@ const timeline = computed(() => {
                 >
               </div>
               <div class="paystub-field">
-                <span class="paystub-field-label">Res / work state</span>
+                <span class="paystub-field-label">Home / work state</span>
                 <span>{{ emp.state }}</span>
               </div>
             </div>
@@ -608,14 +634,14 @@ const timeline = computed(() => {
 
           <div class="paystub-summary">
             <span
-              >Gross wage:
+              >Gross wage
               <strong>{{ formatCurrency(emp.totalPay) }}</strong></span
             >
             <span
-              >Net pay: <strong>{{ formatCurrency(emp.netPay) }}</strong></span
+              >Net pay <strong>{{ formatCurrency(emp.netPay) }}</strong></span
             >
             <span class="paystub-summary-muted"
-              >Direct deposit ••••{{ emp.directDepositLast4 }}</span
+              >Direct deposit to ••••{{ emp.directDepositLast4 }}</span
             >
             <span class="paystub-summary-muted"
               >Voucher #{{ emp.voucherNumber }}</span
@@ -670,42 +696,46 @@ const timeline = computed(() => {
 </template>
 
 <style scoped>
-.info-company {
-  margin: 0;
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
+.info-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-8);
+  padding: var(--space-6);
+  background: var(--color-bg);
+  border: 1px solid var(--color-line);
+  border-radius: var(--border-radius-md);
 }
 
 .timeline {
   position: relative;
   display: flex;
-  justify-content: space-between;
-  padding: var(--space-4) var(--space-2) var(--space-2);
-  margin-top: var(--space-2);
+  flex-direction: column;
+  gap: var(--space-4);
+  padding-left: 6px;
 }
 
 .timeline::before {
   content: '';
   position: absolute;
-  top: calc(var(--space-4) + 2px);
-  left: 0;
-  right: 0;
-  height: 1px;
+  top: 6px;
+  bottom: 6px;
+  left: 11px;
+  width: 1px;
   background: var(--color-line);
+}
+
+.overview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
 }
 
 .timeline-point {
   position: relative;
   display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
+  align-items: center;
+  gap: var(--space-3);
   z-index: 1;
-}
-
-.timeline-date {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  white-space: nowrap;
 }
 
 .timeline-dot {
@@ -714,7 +744,7 @@ const timeline = computed(() => {
   border-radius: var(--border-radius-max);
   background: var(--color-bg);
   border: 2px solid var(--color-line);
-  margin-top: -4px;
+  flex-shrink: 0;
 }
 
 .timeline-dot--past {
@@ -727,33 +757,36 @@ const timeline = computed(() => {
   border-color: var(--color-text-muted);
 }
 
-.timeline-label {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-  white-space: nowrap;
+.timeline-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
 }
 
-.overview-heading {
-  margin: 0;
+.timeline-label {
+  font-size: var(--font-size-md);
+  color: var(--color-text-muted);
+}
+
+.timeline-date {
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-bold);
+  white-space: nowrap;
 }
 
 .overview-subtotals {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
-  padding: 0 var(--space-4);
+  gap: var(--space-2);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-line);
 }
 
 .subtotal-label {
   color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
 }
 
 .subtotal-amount {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
   font-variant-numeric: tabular-nums;
 }
 
@@ -761,13 +794,11 @@ const timeline = computed(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-4);
-  background: var(--color-bg-subtle);
-  border-radius: var(--border-radius-md);
 }
 
 .total-label {
-  color: var(--color-text-muted);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
 }
 
 .total-amount {
@@ -783,17 +814,6 @@ const timeline = computed(() => {
   gap: var(--space-6);
 }
 
-.report-card {
-  padding: var(--space-6);
-  background: var(--color-bg);
-  border: 1px solid var(--color-line);
-  border-radius: var(--border-radius-md);
-}
-
-.report-card--highlight {
-  border-color: var(--color-accent);
-}
-
 .report-card > h3 {
   margin: 0;
   font-size: var(--font-size-md);
@@ -802,12 +822,7 @@ const timeline = computed(() => {
 
 .report-card-header {
   margin-bottom: var(--space-4);
-}
-
-.report-card-header h3 {
-  margin: 0;
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-bold);
+  padding: 0 var(--space-4);
 }
 
 .report-card-subtitle {
@@ -830,17 +845,14 @@ const timeline = computed(() => {
 }
 
 .journal-column-heading {
-  margin: 0 0 var(--space-3);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  color: var(--color-text-muted);
+  margin: 0 0 var(--space-6);
 }
 
 .journal-column-total {
+  font-size: var(--font-size-lg);
   margin-top: var(--space-2);
   padding-top: var(--space-3);
+  padding-right: var(--space-4);
   border-top: 1px solid var(--color-line);
   font-weight: var(--font-weight-bold);
   font-variant-numeric: tabular-nums;
@@ -855,10 +867,11 @@ const timeline = computed(() => {
 }
 
 .category-header {
+  padding-right: var(--space-4);
   margin-bottom: var(--space-2);
 }
 
-.category-header h5 {
+.category-header h4 {
   margin: 0;
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-bold);
@@ -878,8 +891,7 @@ const timeline = computed(() => {
   align-items: baseline;
   gap: var(--space-2);
   width: 100%;
-  padding: var(--space-2) 0;
-  padding-left: var(--space-4);
+  padding: var(--space-2) var(--space-4);
   border: none;
   border-bottom: 1px dotted var(--color-line);
   background: none;
@@ -908,7 +920,6 @@ const timeline = computed(() => {
 
 .item-label {
   flex: 1;
-  color: var(--color-text-muted);
 }
 
 .item-amount {
@@ -918,6 +929,7 @@ const timeline = computed(() => {
 
 .employee-breakdown {
   padding-left: var(--space-10);
+  padding-top: var(--space-2);
 }
 
 .employee-line {
@@ -925,18 +937,14 @@ const timeline = computed(() => {
   align-items: baseline;
   justify-content: space-between;
   gap: var(--space-2);
-  padding: var(--space-1) 0;
-  font-size: var(--font-size-sm);
-}
-
-.employee-name {
-  color: var(--color-text-muted);
+  padding: var(--space-1) var(--space-4);
+  padding-left: 0;
+  font-size: var(--font-size-md);
 }
 
 .employee-amount {
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
-  color: var(--color-text-muted);
 }
 
 .person-view h3 {
@@ -961,11 +969,10 @@ const timeline = computed(() => {
 .paystub-header {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   justify-content: space-between;
-  gap: var(--space-4);
-  padding-bottom: var(--space-4);
-  margin-bottom: var(--space-4);
-  border-bottom: 1px solid var(--color-line);
+  gap: var(--space-6);
+  padding-bottom: var(--space-6);
 }
 
 .paystub-identity {
@@ -976,29 +983,30 @@ const timeline = computed(() => {
 
 .paystub-name {
   font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-lg);
 }
 
 .paystub-meta {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-md);
   color: var(--color-text-muted);
 }
 
 .paystub-fields {
   display: grid;
-  grid-template-columns: repeat(2, auto);
-  gap: var(--space-1) var(--space-6);
+  grid-template-columns: repeat(4, auto);
+  gap: var(--space-2) var(--space-6);
 }
 
 .paystub-field {
   display: flex;
   flex-direction: column;
   gap: 0.125rem;
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-md);
 }
 
 .paystub-field-label {
   color: var(--color-text-muted);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-md);
 }
 
 .paystub-summary {
@@ -1011,12 +1019,7 @@ const timeline = computed(() => {
   margin-bottom: var(--space-4);
   background: var(--color-bg-subtle);
   border-radius: var(--border-radius-md);
-  font-size: var(--font-size-sm);
   font-variant-numeric: tabular-nums;
-}
-
-.paystub-summary-muted {
-  color: var(--color-text-muted);
 }
 
 .paystub-columns {
@@ -1027,11 +1030,8 @@ const timeline = computed(() => {
 
 .paystub-column-heading {
   margin: 0 0 var(--space-2);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-md);
   font-weight: var(--font-weight-bold);
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  color: var(--color-text-muted);
 }
 
 .paystub-table {
@@ -1058,10 +1058,6 @@ const timeline = computed(() => {
   text-align: right;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
-}
-
-.paystub-table td:first-child {
-  color: var(--color-text-muted);
 }
 
 .paystub-table tfoot td {

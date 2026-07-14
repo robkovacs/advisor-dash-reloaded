@@ -235,6 +235,7 @@ function formatDate(iso) {
     calc(var(--space-3) + 1em + var(--space-2));
   font: inherit;
   font-size: var(--font-size-md);
+  line-height: 1;
   color: var(--color-text);
   cursor: pointer;
   height: 2.25rem;
